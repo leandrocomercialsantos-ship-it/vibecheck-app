@@ -47,15 +47,13 @@ const AppContent: React.FC = () => {
   };
 
   const handleScanComplete = (amount: number, label: string) => {
-    // Cálculo de impacto
     const percentageOfBudget = ((amount / user.monthlyBudget) * 100).toFixed(1);
-    const investmentReturn = (amount * 1.1).toLocaleString('pt-BR'); // Simulação simples de 10% a.a.
+    const investmentReturn = (amount * 1.1).toLocaleString('pt-BR');
 
     const message = `${user.name}, esse ${label} custa R$ ${amount.toLocaleString('pt-BR')}. Isso representa ${percentageOfBudget}% do seu orçamento mensal. Se você investir esse valor, em 1 ano ele poderia valer mais de R$ ${investmentReturn}. Quer mesmo continuar com essa compra ou prefere proteger seu futuro?`;
 
     speak(message, voiceSettings);
     
-    // Custom logic alert
     if (confirm(`🤖 ANÁLISE DO GUARDIÃO\n\n${message}\n\nPresione OK para DESISTIR e POUPAR.\nPresione CANCELAR para comprar assim mesmo.`)) {
       addTransaction(amount, 'saving', `Economia: Desistiu de comprar ${label}`);
       alert("Boa escolha! Esse valor foi adicionado ao seu progresso de metas. 🛡️✨");
@@ -103,15 +101,15 @@ const AppContent: React.FC = () => {
         return <ProfileView />;
       case 'settings-voice':
         return (
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 animate-in slide-in-from-bottom-4 shadow-sm">
-            <h2 className="text-2xl font-bold mb-6 text-slate-800">Personalidade do Guardião 🎙️</h2>
+          <div className="glass-premium p-8 rounded-[2.5rem] animate-in slide-in-from-bottom-4 shadow-sm">
+            <h2 className="text-2xl font-bold mb-6 text-white">Personalidade do Guardião 🎙️</h2>
             <div className="space-y-8">
               <div className="flex gap-2">
                 {(['friendly', 'firm', 'funny'] as const).map(p => (
                   <button 
                     key={p}
                     onClick={() => setVoiceSettings({...voiceSettings, personality: p})}
-                    className={`flex-1 py-4 rounded-2xl font-bold capitalize transition-all ${voiceSettings.personality === p ? 'bg-indigo-600 text-white shadow-xl' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
+                    className={`flex-1 py-4 rounded-2xl font-bold capitalize transition-all ${voiceSettings.personality === p ? 'bg-indigo-600 text-white shadow-xl' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
                   >
                     {p === 'friendly' ? 'Amigável' : p === 'firm' ? 'Firme' : 'Engraçado'}
                   </button>
@@ -123,8 +121,8 @@ const AppContent: React.FC = () => {
       case 'gamification':
         return (
           <div className="space-y-6 animate-in zoom-in-95">
-             <div className="bg-indigo-950 text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-               <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+             <div className="glass-premium text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+               <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
                <div className="flex justify-between items-end mb-6">
                  <div>
                    <h2 className="text-4xl font-black italic mb-1">Nível {gamification.level}</h2>
@@ -145,15 +143,6 @@ const AppContent: React.FC = () => {
                  </div>
                </div>
              </div>
-             <h3 className="text-xl font-bold text-slate-800 px-2">Suas Conquistas 🎖️</h3>
-             <div className="grid grid-cols-2 gap-4">
-                {['Primeiro Dia', 'Resiliente', 'Economista Nato', 'Anti-Bet Master'].map(b => (
-                  <div key={b} className={`p-5 rounded-[2rem] border-2 flex flex-col items-center gap-3 text-center transition-all ${gamification.badges.includes(b) ? 'bg-white border-emerald-100' : 'bg-slate-50 border-slate-100 opacity-40'}`}>
-                    <span className="text-3xl">{gamification.badges.includes(b) ? '✅' : '🔒'}</span>
-                    <span className="text-[10px] font-black text-slate-700 uppercase leading-tight">{b}</span>
-                  </div>
-                ))}
-             </div>
           </div>
         );
       default:
@@ -162,7 +151,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-24 md:pb-0 font-['Inter'] selection:bg-indigo-100">
+    <div className="min-h-screen flex flex-col pb-24 md:pb-0 font-['Inter'] selection:bg-indigo-500/30">
       <Header onMenuClick={() => setIsSidebarOpen(true)} />
       
       <Sidebar 
@@ -176,7 +165,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8 pb-20">
         {renderView()}
 
-        {activeView !== 'scanner' && activeView !== 'profile' && (
+        {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'dashboard' && (
           <QuickActions 
             onAddSaving={(amt) => addTransaction(amt, 'saving', 'Gasto evitado')}
             onAddLoss={(amt) => addTransaction(amt, 'gambling', 'Aposta efetuada')}
@@ -185,23 +174,24 @@ const AppContent: React.FC = () => {
         )}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 p-4 md:hidden z-40">
-        <div className="glass rounded-[2rem] flex justify-around p-3 shadow-2xl border border-white/20">
+      {/* Navigation Inferior Premium */}
+      <nav className="fixed bottom-0 left-0 right-0 p-4 md:p-6 z-40 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none">
+        <div className="glass-premium rounded-[2.5rem] flex justify-around p-4 shadow-2xl border border-white/10 pointer-events-auto max-w-md mx-auto">
           {[
-            { icon: '📊', view: 'dashboard' as const, label: 'Início' },
+            { icon: '🏠', view: 'dashboard' as const, label: 'Início' },
             { icon: '🎯', view: 'goals' as const, label: 'Cofre' },
             { icon: '🛡️', view: 'chat' as const, label: 'Apoio' },
-            { icon: '🌍', view: 'community' as const, label: 'Mundo' }
+            { icon: '👤', view: 'profile' as const, label: 'Perfil' }
           ].map(item => (
             <button 
               key={item.view}
               onClick={() => setActiveView(item.view)}
-              className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeView === item.view ? 'text-indigo-600 scale-110' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex flex-col items-center gap-1 transition-all duration-500 ${activeView === item.view ? 'scale-110' : 'opacity-40 hover:opacity-100'}`}
             >
-              <div className={`w-12 h-10 rounded-2xl flex items-center justify-center text-xl transition-all ${activeView === item.view ? 'bg-indigo-600 text-white shadow-lg' : ''}`}>
+              <div className={`w-12 h-10 rounded-2xl flex items-center justify-center text-xl transition-all ${activeView === item.view ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)]' : 'text-slate-400'}`}>
                 {item.icon}
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-tighter">{item.label}</span>
+              <span className={`text-[9px] font-black uppercase tracking-tighter ${activeView === item.view ? 'text-indigo-400' : 'text-slate-500'}`}>{item.label}</span>
             </button>
           ))}
         </div>
