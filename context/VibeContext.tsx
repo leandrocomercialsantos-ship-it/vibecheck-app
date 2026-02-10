@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types.ts';
-import { INITIAL_GOALS } from '../constants.ts';
 
 interface VibeContextType {
   user: UserProfile;
@@ -9,6 +8,8 @@ interface VibeContextType {
   transactions: Transaction[];
   addTransaction: (amount: number, type: Transaction['type'], description: string) => void;
   goals: Goal[];
+  addGoal: (name: string, targetAmount: number) => void;
+  updateGoalAmount: (goalId: string, amount: number) => void;
   voiceSettings: VoiceSettings;
   setVoiceSettings: (settings: VoiceSettings) => void;
   gamification: Gamification;
@@ -31,7 +32,7 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       vibe: 'Iniciando jornada 🛡️',
       guardianContact: '',
       isBankConnected: false,
-      monthlyBudget: 3000, // Salário médio padrão para cálculos
+      monthlyBudget: 3000,
     };
   });
 
@@ -42,7 +43,8 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const [goals, setGoals] = useState<Goal[]>(() => {
     const saved = localStorage.getItem(GOALS_KEY);
-    return saved ? JSON.parse(saved) : INITIAL_GOALS;
+    // Iniciar vazio se não houver nada salvo, conforme solicitado
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>({
@@ -58,7 +60,6 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     badges: [],
   });
 
-  // Persist values
   useEffect(() => {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   }, [user]);
@@ -71,6 +72,39 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
   }, [goals]);
 
+  const addGoal = (name: string, targetAmount: number) => {
+    const newGoal: Goal = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
+      targetAmount,
+      currentAmount: 0,
+      icon: '🎯'
+    };
+    setGoals(prev => [...prev, newGoal]);
+  };
+
+  const updateGoalAmount = (goalId: string, amount: number) => {
+    setGoals(prev => prev.map(goal => 
+      goal.id === goalId 
+        ? { ...goal, currentAmount: goal.currentAmount + amount } 
+        : goal
+    ));
+    
+    // Ganhar XP ao investir em metas
+    setGamification(prev => {
+      const newXp = prev.xp + 25;
+      if (newXp >= prev.nextLevelXp) {
+        return {
+          ...prev,
+          level: prev.level + 1,
+          xp: newXp - prev.nextLevelXp,
+          nextLevelXp: prev.nextLevelXp + 150
+        };
+      }
+      return { ...prev, xp: newXp };
+    });
+  };
+
   const addTransaction = (amount: number, type: Transaction['type'], description: string) => {
     const newTransaction: Transaction = {
       id: Math.random().toString(36).substr(2, 9),
@@ -82,10 +116,6 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setTransactions(prev => [newTransaction, ...prev]);
 
     if (type === 'saving') {
-      setGoals(prevGoals => prevGoals.map(goal => ({
-        ...goal,
-        currentAmount: goal.currentAmount + (amount / prevGoals.length)
-      })));
       setGamification(prev => {
         const newXp = prev.xp + 50;
         if (newXp >= prev.nextLevelXp) {
@@ -110,7 +140,7 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <VibeContext.Provider value={{
       user, setUser,
       transactions, addTransaction,
-      goals,
+      goals, addGoal, updateGoalAmount,
       voiceSettings, setVoiceSettings,
       gamification, setGamification
     }}>

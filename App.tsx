@@ -88,7 +88,9 @@ const AppContent: React.FC = () => {
           onScan={() => setActiveView('scanner')}
         />;
       case 'goals':
-        return <GoalsSystem goals={goals} totalSaved={totalSaved} />;
+        // FIX: Removed redundant props 'goals' and 'totalSaved' because GoalsSystem 
+        // accesses needed data directly from VibeContext and is defined as a prop-less component.
+        return <GoalsSystem />;
       case 'chat':
         return <CrisisChat voiceSettings={voiceSettings} />;
       case 'report':
