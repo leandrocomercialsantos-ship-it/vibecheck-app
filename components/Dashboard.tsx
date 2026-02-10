@@ -18,10 +18,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
 
-  const totalSaved = useMemo(() => {
-    return transactions.filter(t => t.type === 'gain').reduce((acc, t) => acc + Math.abs(t.amount), 0);
-  }, [transactions]);
-
   const gamblingTotal = useMemo(() => {
     return transactions.filter(t => t.type === 'loss').reduce((acc, t) => acc + Math.abs(t.amount), 0);
   }, [transactions]);
@@ -44,26 +40,39 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-6 md:space-y-10 pb-20">
       
-      {/* Centered Avatar & Greeting Section */}
+      {/* Immersive AI Assistant Button Section */}
       <div className="flex flex-col items-center text-center space-y-4 pt-2 md:pt-4">
         <div className="relative">
-          <div className="absolute inset-0 bg-orange-500 rounded-full blur-2xl opacity-20 animate-pulse"></div>
-          <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-orange-400/50 p-1 bg-slate-900/50 backdrop-blur-md shadow-[0_0_30px_rgba(251,146,60,0.3)]">
-            <img 
-              src={user.avatar} 
-              alt="Avatar" 
-              className="w-full h-full rounded-full object-cover"
-            />
-          </div>
-          <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-white rounded-full border-4 border-slate-950 flex items-center justify-center text-[10px] shadow-lg">
-            <PelicanLogo className="w-4 h-4 text-slate-900" />
-          </div>
+          {/* Outer Ring Animation */}
+          <div className="absolute inset-0 border-2 border-orange-500/30 rounded-full ai-pulse-ring"></div>
+          <div className="absolute inset-0 border-2 border-orange-400/20 rounded-full ai-pulse-ring [animation-delay:1s]"></div>
+          
+          <button 
+            onClick={onPanic}
+            className="relative w-28 h-28 md:w-32 md:h-32 rounded-full glass-premium border-2 border-orange-500/40 flex items-center justify-center group shadow-[0_0_40px_rgba(251,146,60,0.25)] hover:shadow-[0_0_60px_rgba(251,146,60,0.4)] transition-all active:scale-90"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            
+            {/* AI Core Icon */}
+            <div className="flex flex-col items-center gap-1">
+              <svg className="w-12 h-12 text-orange-400 group-hover:scale-110 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <circle cx="12" cy="12" r="10" strokeOpacity="0.1" />
+              </svg>
+              <div className="flex gap-1">
+                <span className="w-1 h-3 bg-orange-500/60 rounded-full animate-pulse"></span>
+                <span className="w-1 h-4 bg-orange-400 rounded-full animate-pulse [animation-delay:0.2s]"></span>
+                <span className="w-1 h-3 bg-orange-500/60 rounded-full animate-pulse [animation-delay:0.4s]"></span>
+              </div>
+            </div>
+          </button>
         </div>
+        
         <div className="space-y-1 px-4">
           <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">
             Olá, <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">{user.name || 'Investidor'}</span>!
           </h2>
-          <p className="text-slate-400 text-xs md:text-sm font-medium">Status do seu ninho Pro ativado.</p>
+          <p className="text-slate-400 text-xs md:text-sm font-medium">Toque no centro para falar com a IA Pelicano.</p>
         </div>
       </div>
 

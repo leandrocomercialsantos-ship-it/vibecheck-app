@@ -8,8 +8,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
-  const { user } = usePelicano();
-
   return (
     <header className="px-6 py-6 flex items-center justify-between sticky top-0 z-50 bg-slate-950/20 backdrop-blur-lg">
       <div className="flex items-center gap-4">
@@ -29,11 +27,8 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
       </div>
       
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full p-0.5 bg-gradient-to-r from-orange-400 to-amber-500 shadow-lg">
-          <div className="w-full h-full rounded-full border-2 border-slate-950 overflow-hidden">
-            <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
-          </div>
-        </div>
+        {/* Espaço reservado para manter o alinhamento ou futuras ações */}
+        <div className="w-10"></div>
       </div>
     </header>
   );
