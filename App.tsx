@@ -11,6 +11,7 @@ import { Sidebar } from './components/Sidebar.tsx';
 import { Scanner } from './components/Scanner.tsx';
 import { RealityReport } from './components/RealityReport.tsx';
 import { CommunityFeed } from './components/CommunityFeed.tsx';
+import { ProfileView } from './components/ProfileView.tsx';
 import { VibeProvider, useVibe } from './context/VibeContext.tsx';
 import { speak } from './services/speech.ts';
 import { Transaction, Goal, UserProfile, VoiceSettings, Gamification } from './types.ts';
@@ -21,7 +22,7 @@ type AppState = 'landing' | 'signup' | 'main';
 const AppContent: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(() => {
     const saved = localStorage.getItem('vibecheck_user_data');
-    return saved && JSON.parse(saved).name ? 'main' : 'landing';
+    return (saved && JSON.parse(saved).name) ? 'main' : 'landing';
   });
   const [activeView, setActiveView] = useState<View>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -74,17 +75,6 @@ const AppContent: React.FC = () => {
   if (appState === 'landing') return <LandingPage onStart={() => setAppState('signup')} />;
   if (appState === 'signup') return <SignupPage onComplete={() => setAppState('main')} />;
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUser(prev => ({ ...prev, avatar: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const renderView = () => {
     switch (activeView) {
       case 'dashboard':
@@ -106,54 +96,7 @@ const AppContent: React.FC = () => {
       case 'scanner':
         return <Scanner onScanComplete={handleScanComplete} onClose={() => setActiveView('dashboard')} />;
       case 'profile':
-        return (
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 animate-in fade-in shadow-sm">
-            <h2 className="text-2xl font-bold mb-6 text-slate-800">Meu Perfil</h2>
-            <div className="space-y-6 text-center">
-              <div className="relative w-32 h-32 mx-auto">
-                <img src={user.avatar} className="w-full h-full rounded-[2rem] object-cover border-4 border-slate-50 shadow-xl" alt="Profile" />
-                <label className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-2 rounded-xl shadow-lg cursor-pointer hover:bg-indigo-700 transition-colors">
-                  📸
-                  <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
-                </label>
-              </div>
-              
-              <div className="space-y-4 text-left">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Nome de Exibição</label>
-                  <input 
-                    className="w-full p-5 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
-                    value={user.name} 
-                    onChange={e => setUser({...user, name: e.target.value})}
-                  />
-                </div>
-                
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email</label>
-                  <input 
-                    className="w-full p-5 bg-slate-50 rounded-2xl border-none font-medium opacity-60 cursor-not-allowed" 
-                    value={user.email} 
-                    readOnly
-                  />
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-slate-100">
-                <h3 className="font-bold text-slate-800 mb-4 text-left">Open Finance 🔒</h3>
-                <button 
-                  onClick={() => setUser({...user, isBankConnected: !user.isBankConnected})}
-                  className={`w-full py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 ${user.isBankConnected ? 'bg-emerald-50 text-emerald-600 border-2 border-emerald-100' : 'bg-slate-900 text-white shadow-lg'}`}
-                >
-                  {user.isBankConnected ? (
-                    <><span>✅</span> Banco Conectado</>
-                  ) : (
-                    <><span>🏦</span> Conectar via Open Finance</>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        );
+        return <ProfileView />;
       case 'settings-voice':
         return (
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 animate-in slide-in-from-bottom-4 shadow-sm">
@@ -170,22 +113,6 @@ const AppContent: React.FC = () => {
                   </button>
                 ))}
               </div>
-            </div>
-          </div>
-        );
-      case 'settings-guardian':
-        return (
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 animate-in fade-in shadow-sm">
-            <h2 className="text-2xl font-bold mb-4 text-slate-800">Modo Anjo da Guarda 👼</h2>
-            <p className="text-sm text-slate-500 mb-8 leading-relaxed">Em caso de crise severa ou impulsos recorrentes, vamos notificar automaticamente essa pessoa de confiança para te apoiar.</p>
-            <div className="space-y-4">
-              <input 
-                placeholder="Email ou Telefone de confiança" 
-                className="w-full p-5 bg-slate-50 rounded-2xl border-none outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-                value={user.guardianContact}
-                onChange={e => setUser({...user, guardianContact: e.target.value})}
-              />
-              <button className="w-full py-5 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-100 active:scale-95 transition-all">Ativar Proteção</button>
             </div>
           </div>
         );
@@ -214,7 +141,6 @@ const AppContent: React.FC = () => {
                  </div>
                </div>
              </div>
-             
              <h3 className="text-xl font-bold text-slate-800 px-2">Suas Conquistas 🎖️</h3>
              <div className="grid grid-cols-2 gap-4">
                 {['Primeiro Dia', 'Resiliente', 'Economista Nato', 'Anti-Bet Master'].map(b => (
