@@ -98,7 +98,7 @@ const AppContent: React.FC = () => {
       case 'scanner':
         return <Scanner onScanComplete={handleScanComplete} onClose={() => setActiveView('dashboard')} />;
       case 'profile':
-        return <ProfileView />;
+        return <ProfileView onClose={() => setActiveView('dashboard')} />;
       case 'gamification':
         return (
           <div className="space-y-6 animate-in zoom-in-95">
@@ -132,7 +132,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-24 md:pb-0 font-['Inter'] selection:bg-orange-500/30">
+    <div className="min-h-screen flex flex-col pb-32 md:pb-0 font-['Inter'] selection:bg-orange-500/30">
       <Header onMenuClick={() => setIsSidebarOpen(true)} />
       
       <Sidebar 
@@ -143,7 +143,7 @@ const AppContent: React.FC = () => {
         stats={gamification}
       />
 
-      <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8 pb-20">
+      <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8 pb-10">
         {renderView()}
 
         {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'dashboard' && (
@@ -178,9 +178,9 @@ const AppContent: React.FC = () => {
         </div>
       </nav>
       
-      {/* Footer Fixo */}
-      <div className="fixed bottom-2 left-0 right-0 text-center pointer-events-none pb-1">
-        <p className="text-[8px] text-slate-700 italic font-medium tracking-widest opacity-50">
+      {/* Footer Fixo (by Leandro Dos Santos) */}
+      <div className="fixed bottom-1 left-0 right-0 text-center pointer-events-none z-[60] pb-2">
+        <p className="text-[9px] text-slate-500 italic font-bold tracking-[0.2em] opacity-80 uppercase">
           by Leandro Dos Santos
         </p>
       </div>
