@@ -12,10 +12,11 @@ import { Scanner } from './components/Scanner.tsx';
 import { RealityReport } from './components/RealityReport.tsx';
 import { CommunityFeed } from './components/CommunityFeed.tsx';
 import { ProfileView } from './components/ProfileView.tsx';
+import { LegalNotice } from './components/LegalNotice.tsx';
 import { PelicanoProvider, usePelicano } from './context/PelicanoContext.tsx';
 import { speak } from './services/speech.ts';
 
-type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'gamification' | 'report' | 'community';
+type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'gamification' | 'report' | 'community' | 'legal';
 type AppState = 'landing' | 'signup' | 'main';
 
 const AppContent: React.FC = () => {
@@ -74,7 +75,7 @@ const AppContent: React.FC = () => {
   }, [transactions]);
 
   if (appState === 'landing') return <LandingPage onStart={() => setAppState('signup')} />;
-  if (appState === 'signup') return <SignupPage onComplete={() => setAppState('main')} />;
+  if (appState === 'signup') return <SignupPage onComplete={() => setAppState('main')} onShowLegal={() => setActiveView('legal')} />;
 
   const renderView = () => {
     switch (activeView) {
@@ -98,6 +99,8 @@ const AppContent: React.FC = () => {
         return <Scanner onScanComplete={handleScanComplete} onClose={() => setActiveView('dashboard')} />;
       case 'profile':
         return <ProfileView onClose={() => setActiveView('dashboard')} />;
+      case 'legal':
+        return <LegalNotice onClose={() => setActiveView('dashboard')} />;
       case 'gamification':
         return (
           <div className="space-y-6 animate-in zoom-in-95">
@@ -145,7 +148,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8">
         {renderView()}
 
-        {activeView !== 'scanner' && activeView !== 'profile' && (
+        {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'legal' && (
           <QuickActions 
             onAddSaving={(amt, cat) => addTransaction(amt, 'saving', 'Economia Inteligente', cat)}
             onAddLoss={(amt, cat) => addTransaction(amt, 'impulse', 'Gasto Registrado', cat)}

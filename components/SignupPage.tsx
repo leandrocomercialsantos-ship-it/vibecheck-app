@@ -4,15 +4,17 @@ import { usePelicano } from '../context/PelicanoContext.tsx';
 
 interface SignupPageProps {
   onComplete: () => void;
+  onShowLegal: () => void;
 }
 
-export const SignupPage: React.FC<SignupPageProps> = ({ onComplete }) => {
+export const SignupPage: React.FC<SignupPageProps> = ({ onComplete, onShowLegal }) => {
   const { setUser } = usePelicano();
   const [step, setStep] = useState<'form' | 'permissions'>('form');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [permissions, setPermissions] = useState({
     notifications: false,
     camera: false,
@@ -28,7 +30,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete }) => {
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === confirmPassword && password.length >= 6 && name.trim()) {
+    if (password === confirmPassword && password.length >= 6 && name.trim() && acceptedTerms) {
       setStep('permissions');
     }
   };
@@ -117,9 +119,28 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete }) => {
                 />
               </div>
 
+              {/* Trava de Cadastro: Aviso Legal */}
+              <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl border border-orange-100 mt-4">
+                <input 
+                  type="checkbox" 
+                  id="terms"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                  className="mt-1 w-5 h-5 rounded border-orange-300 text-orange-600 focus:ring-orange-500"
+                />
+                <label htmlFor="terms" className="text-xs text-orange-900 leading-relaxed">
+                  Estou ciente de que o Pelicano Invest é uma ferramenta experimental de entretenimento e concordo com os <button type="button" onClick={onShowLegal} className="underline font-bold hover:text-orange-700">Aviso Legal e Termos de Uso</button>.
+                </label>
+              </div>
+
               <button 
                 type="submit"
-                className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl shadow-lg shadow-slate-100 hover:bg-slate-800 transition-all active:scale-95"
+                disabled={!acceptedTerms || password !== confirmPassword || password.length < 6}
+                className={`w-full py-4 font-bold rounded-2xl shadow-lg transition-all active:scale-95 ${
+                  acceptedTerms && password === confirmPassword && password.length >= 6
+                  ? 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-100' 
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                }`}
               >
                 Cadastrar
               </button>

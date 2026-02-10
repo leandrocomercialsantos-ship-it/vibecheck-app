@@ -19,6 +19,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
     { label: 'Comunidade Elite', icon: '🌍', view: 'community' },
     { label: 'Relatórios Mensais', icon: '📈', view: 'report' },
     { label: 'Nível de Prosperidade', icon: '🏆', view: 'gamification' },
+    { label: 'Termos e Isenção', icon: '⚖️', view: 'legal' },
   ];
 
   return (
@@ -85,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
           <div className="flex justify-center mb-2">
             <PelicanLogo className="w-6 h-6 text-orange-400" />
           </div>
-          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Pelicano Invest v4.0</p>
+          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Pelicano Invest Pro v4.0</p>
           <p className="text-[10px] text-slate-600 italic font-medium">by Leandro Dos Santos</p>
         </div>
       </aside>
