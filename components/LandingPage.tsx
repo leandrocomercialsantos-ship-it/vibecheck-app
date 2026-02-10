@@ -129,9 +129,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-white/5 text-center bg-slate-950">
+      <footer className="py-12 px-6 border-t border-white/5 text-center bg-slate-950 space-y-4">
         <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.5em]">
           VibeCheck Finance &copy; 2024 - Elite Protection
+        </p>
+        <p className="text-slate-500 text-xs italic font-medium opacity-60">
+          Created by Leandro Dos Santos
         </p>
       </footer>
     </div>

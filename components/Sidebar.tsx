@@ -85,8 +85,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
           </div>
         </nav>
 
-        <div className="p-6 border-t border-slate-100 text-center">
+        <div className="p-6 border-t border-slate-100 text-center space-y-2">
           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">VibeCheck Finance v3.1</p>
+          <p className="text-[10px] text-slate-400 italic font-medium">Creator: Leandro Dos Santos</p>
         </div>
       </aside>
     </>
