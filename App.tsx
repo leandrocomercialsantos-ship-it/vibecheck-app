@@ -13,10 +13,12 @@ import { RealityReport } from './components/RealityReport.tsx';
 import { CommunityFeed } from './components/CommunityFeed.tsx';
 import { ProfileView } from './components/ProfileView.tsx';
 import { LegalNotice } from './components/LegalNotice.tsx';
+import { AnalysisView } from './components/AnalysisView.tsx';
+import { TableView } from './components/TableView.tsx';
 import { PelicanoProvider, usePelicano } from './context/PelicanoContext.tsx';
 import { speak } from './services/speech.ts';
 
-type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'gamification' | 'report' | 'community' | 'legal';
+type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'gamification' | 'report' | 'community' | 'legal' | 'analysis' | 'table';
 type AppState = 'landing' | 'signup' | 'main';
 
 const AppContent: React.FC = () => {
@@ -54,25 +56,15 @@ const AppContent: React.FC = () => {
     speak(message, voiceSettings);
     
     if (confirm(`🦅 ANÁLISE PELICANO PRO\n\n${message}\n\nPresione OK para PROTEGER e POUPAR.\nPresione CANCELAR para prosseguir com o gasto.`)) {
-      addTransaction(amount, 'saving', `Proteção: ${label}`, 'Outros');
+      addTransaction(amount, 'gain', `Proteção: ${label}`, 'Outros');
       alert("Decisão sábia. O Pelicano Invest registrou sua economia no Extrato Inteligente. 🛡️✨");
       setActiveView('dashboard');
     } else {
-      addTransaction(amount, 'impulse', `Gasto: ${label}`, 'Outros');
+      addTransaction(amount, 'loss', `Gasto: ${label}`, 'Outros');
       alert("Registro efetuado. O Pelicano continuará vigiando para sua próxima oportunidade.");
       setActiveView('dashboard');
     }
   };
-
-  const { gamblingTotal, totalSaved } = useMemo(() => {
-    const gambling = transactions
-      .filter(t => t.type === 'gambling' || t.type === 'impulse')
-      .reduce((acc, curr) => acc + curr.amount, 0);
-    const saved = transactions
-      .filter(t => t.type === 'saving')
-      .reduce((acc, curr) => acc + curr.amount, 0);
-    return { gamblingTotal: gambling, totalSaved: saved };
-  }, [transactions]);
 
   if (appState === 'landing') return <LandingPage onStart={() => setAppState('signup')} />;
   if (appState === 'signup') return <SignupPage onComplete={() => setAppState('main')} onShowLegal={() => setActiveView('legal')} />;
@@ -81,12 +73,13 @@ const AppContent: React.FC = () => {
     switch (activeView) {
       case 'dashboard':
         return <Dashboard 
-          gamblingTotal={gamblingTotal} 
-          totalSaved={totalSaved} 
-          transactions={transactions} 
           onPanic={handlePanic}
           onScan={() => setActiveView('scanner')}
         />;
+      case 'analysis':
+        return <AnalysisView />;
+      case 'table':
+        return <TableView />;
       case 'goals':
         return <GoalsSystem />;
       case 'chat':
@@ -129,7 +122,7 @@ const AppContent: React.FC = () => {
           </div>
         );
       default:
-        return <Dashboard gamblingTotal={gamblingTotal} totalSaved={totalSaved} transactions={transactions} onPanic={handlePanic} onScan={() => setActiveView('scanner')} />;
+        return <Dashboard onPanic={handlePanic} onScan={() => setActiveView('scanner')} />;
     }
   };
 
@@ -148,23 +141,24 @@ const AppContent: React.FC = () => {
       <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8">
         {renderView()}
 
-        {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'legal' && (
+        {/* Floating SOS Action - Only on Dashboard */}
+        {activeView === 'dashboard' && (
           <QuickActions 
-            onAddSaving={(amt, cat) => addTransaction(amt, 'saving', 'Economia Inteligente', cat)}
-            onAddLoss={(amt, cat) => addTransaction(amt, 'impulse', 'Gasto Registrado', cat)}
+            onAddSaving={(amt, cat) => addTransaction(amt, 'gain', 'Economia Inteligente', cat)}
+            onAddLoss={(amt, cat) => addTransaction(amt, 'loss', 'Gasto Registrado', cat)}
             onOpenCrisis={() => setActiveView('chat')}
           />
         )}
       </main>
 
-      {/* Navigation Inferior Pelicano */}
+      {/* Navigation Inferior Pelicano (ABAS FIXAS) */}
       <nav className="fixed bottom-0 left-0 right-0 p-4 md:p-6 z-[100] bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent pointer-events-none">
         <div className="glass-premium rounded-[2.5rem] flex justify-around p-4 shadow-2xl border border-white/10 pointer-events-auto max-w-md mx-auto mb-2">
           {[
             { icon: '🏠', view: 'dashboard' as const, label: 'Início' },
-            { icon: '🎯', view: 'goals' as const, label: 'Cofre' },
-            { icon: '🦅', view: 'chat' as const, label: 'Estratégia' },
-            { icon: '👤', view: 'profile' as const, label: 'Perfil' }
+            { icon: '📊', view: 'analysis' as const, label: 'Análise' },
+            { icon: '📋', view: 'table' as const, label: 'Planilha' },
+            { icon: '🎯', view: 'goals' as const, label: 'Cofre' }
           ].map(item => (
             <button 
               key={item.view}

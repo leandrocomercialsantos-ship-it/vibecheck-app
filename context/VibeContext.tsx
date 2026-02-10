@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { UserProfile, Transaction, Goal, VoiceSettings, Gamification, TransactionCategory } from '../types.ts';
 
@@ -132,7 +133,8 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
     setTransactions(prev => [newTransaction, ...prev]);
 
-    if (type === 'saving') {
+    // Fix: Corrected comparison from 'saving' to 'gain' since type is 'gain' | 'loss'
+    if (type === 'gain') {
       setGamification(prev => {
         const newXp = prev.xp + 50;
         if (newXp >= prev.nextLevelXp) {

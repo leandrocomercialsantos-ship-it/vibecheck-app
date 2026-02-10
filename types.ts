@@ -11,8 +11,8 @@ export type TransactionCategory = 'Alimentação' | 'Lazer' | 'Transporte' | 'Sa
 
 export interface Transaction {
   id: string;
-  amount: number;
-  type: 'gambling' | 'impulse' | 'saving';
+  amount: number; // Positivo para ganhos, Negativo para gastos
+  type: 'gain' | 'loss';
   description: string;
   category: TransactionCategory;
   date: string;

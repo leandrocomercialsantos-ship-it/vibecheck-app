@@ -6,6 +6,7 @@ export const getCrisisSupportResponse = async (userMessage: string, history: { r
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   try {
+    // Using gemini-3-flash-preview for simple chat/support tasks
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: [
@@ -16,10 +17,11 @@ export const getCrisisSupportResponse = async (userMessage: string, history: { r
         systemInstruction: SYSTEM_INSTRUCTION,
         temperature: 0.7,
         topP: 0.8,
-        maxOutputTokens: 500,
+        // Recommended to avoid setting maxOutputTokens unless explicitly required
       },
     });
 
+    // Access the text property directly on the response object
     return response.text || "Desculpe, tive um problema ao processar sua mensagem. Estou aqui por você.";
   } catch (error) {
     console.error("Gemini API Error:", error);

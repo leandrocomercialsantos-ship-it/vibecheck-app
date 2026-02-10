@@ -122,9 +122,12 @@ export const PelicanoProvider: React.FC<{ children: ReactNode }> = ({ children }
   }, []);
 
   const addTransaction = useCallback((amount: number, type: Transaction['type'], description: string, category: TransactionCategory = 'Outros') => {
+    // Garantir sinal correto: gain (+), loss (-)
+    const signedAmount = type === 'gain' ? Math.abs(amount) : -Math.abs(amount);
+    
     const newTransaction: Transaction = {
       id: Math.random().toString(36).substr(2, 9),
-      amount,
+      amount: signedAmount,
       type,
       description,
       category,
@@ -132,7 +135,7 @@ export const PelicanoProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
     setTransactions(prev => [newTransaction, ...prev]);
 
-    if (type === 'saving') {
+    if (type === 'gain') {
       setGamification(prev => {
         const newXp = prev.xp + 50;
         if (newXp >= prev.nextLevelXp) {
@@ -148,7 +151,7 @@ export const PelicanoProvider: React.FC<{ children: ReactNode }> = ({ children }
     } else {
       setGamification(prev => ({
         ...prev,
-        xp: Math.max(0, prev.xp - 20)
+        xp: Math.max(0, prev.xp - 10)
       }));
     }
   }, []);

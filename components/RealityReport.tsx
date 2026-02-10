@@ -5,11 +5,13 @@ import { usePelicano } from '../context/PelicanoContext.tsx';
 export const RealityReport: React.FC = () => {
   const { transactions } = usePelicano();
   
+  // Fix: Filter by 'gain' instead of 'saving' to match Transaction['type'] definition
   const savedThisMonth = transactions
-    .filter(t => t.type === 'saving')
+    .filter(t => t.type === 'gain')
     .reduce((acc, curr) => acc + curr.amount, 0);
     
-  const impulsesAvoided = transactions.filter(t => t.type === 'saving').length;
+  // Fix: Filter by 'gain' instead of 'saving' to match Transaction['type'] definition
+  const impulsesAvoided = transactions.filter(t => t.type === 'gain').length;
   
   // Hypothetical "Life Quality" metric: assume R$ 50 = 1 day of stress-free living
   const lifeDaysGained = Math.floor(savedThisMonth / 50);
