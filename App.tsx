@@ -16,7 +16,7 @@ import { VibeProvider, useVibe } from './context/VibeContext.tsx';
 import { speak } from './services/speech.ts';
 import { Transaction, Goal, UserProfile, VoiceSettings, Gamification } from './types.ts';
 
-type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'settings-guardian' | 'gamification' | 'report' | 'community';
+type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'gamification' | 'report' | 'community';
 type AppState = 'landing' | 'signup' | 'main';
 
 const AppContent: React.FC = () => {
@@ -37,30 +37,30 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     if (appState === 'main' && user.name) {
-      speak(`Olá ${user.name}! Sou o seu Guardião. Como está o seu equilíbrio financeiro hoje?`, voiceSettings);
+      speak(`Olá ${user.name}! Bem-vindo ao Pelicano Invest. Vamos proteger seu patrimônio hoje?`, voiceSettings);
     }
   }, [appState]);
 
   const handlePanic = () => {
-    speak("Ei, respira fundo. Antes de apostar, vamos conversar por 30 segundos?", voiceSettings);
+    speak("A calma é a melhor estratégia do Pelicano. Vamos analisar suas opções antes de qualquer gasto?", voiceSettings);
     setActiveView('chat');
   };
 
   const handleScanComplete = (amount: number, label: string) => {
     const percentageOfBudget = ((amount / user.monthlyBudget) * 100).toFixed(1);
-    const investmentReturn = (amount * 1.1).toLocaleString('pt-BR');
+    const investmentReturn = (amount * 1.15).toLocaleString('pt-BR');
 
-    const message = `${user.name}, esse ${label} custa R$ ${amount.toLocaleString('pt-BR')}. Isso representa ${percentageOfBudget}% do seu orçamento mensal. Se você investir esse valor, em 1 ano ele poderia valer mais de R$ ${investmentReturn}. Quer mesmo continuar com essa compra ou prefere proteger seu futuro?`;
+    const message = `${user.name}, o Pelicano Invest analisou este ${label}. O custo é de R$ ${amount.toLocaleString('pt-BR')}, ou ${percentageOfBudget}% do seu capital mensal. Este valor reinvestido hoje poderia render R$ ${investmentReturn} em breve. Deseja manter este valor no seu ninho?`;
 
     speak(message, voiceSettings);
     
-    if (confirm(`🤖 ANÁLISE DO GUARDIÃO\n\n${message}\n\nPresione OK para DESISTIR e POUPAR.\nPresione CANCELAR para comprar assim mesmo.`)) {
-      addTransaction(amount, 'saving', `Economia: Desistiu de comprar ${label}`);
-      alert("Boa escolha! Esse valor foi adicionado ao seu progresso de metas. 🛡️✨");
+    if (confirm(`🦅 ANÁLISE PELICANO\n\n${message}\n\nPresione OK para PROTEGER e POUPAR.\nPresione CANCELAR para prosseguir com o gasto.`)) {
+      addTransaction(amount, 'saving', `Proteção Pelicano: Poupou ao não comprar ${label}`);
+      alert("Decisão sábia. O Pelicano Invest registrou sua economia. 🛡️✨");
       setActiveView('goals');
     } else {
-      addTransaction(amount, 'impulse', `Gasto por impulso: ${label}`);
-      alert("Entendido. Registramos o gasto, mas lembre-se do seu objetivo maior.");
+      addTransaction(amount, 'impulse', `Gasto registrado: ${label}`);
+      alert("Registro efetuado. O Pelicano continuará vigiando para sua próxima oportunidade.");
       setActiveView('dashboard');
     }
     setActiveView('dashboard');
@@ -88,8 +88,6 @@ const AppContent: React.FC = () => {
           onScan={() => setActiveView('scanner')}
         />;
       case 'goals':
-        // FIX: Removed redundant props 'goals' and 'totalSaved' because GoalsSystem 
-        // accesses needed data directly from VibeContext and is defined as a prop-less component.
         return <GoalsSystem />;
       case 'chat':
         return <CrisisChat voiceSettings={voiceSettings} />;
@@ -101,45 +99,26 @@ const AppContent: React.FC = () => {
         return <Scanner onScanComplete={handleScanComplete} onClose={() => setActiveView('dashboard')} />;
       case 'profile':
         return <ProfileView />;
-      case 'settings-voice':
-        return (
-          <div className="glass-premium p-8 rounded-[2.5rem] animate-in slide-in-from-bottom-4 shadow-sm">
-            <h2 className="text-2xl font-bold mb-6 text-white">Personalidade do Guardião 🎙️</h2>
-            <div className="space-y-8">
-              <div className="flex gap-2">
-                {(['friendly', 'firm', 'funny'] as const).map(p => (
-                  <button 
-                    key={p}
-                    onClick={() => setVoiceSettings({...voiceSettings, personality: p})}
-                    className={`flex-1 py-4 rounded-2xl font-bold capitalize transition-all ${voiceSettings.personality === p ? 'bg-indigo-600 text-white shadow-xl' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
-                  >
-                    {p === 'friendly' ? 'Amigável' : p === 'firm' ? 'Firme' : 'Engraçado'}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
       case 'gamification':
         return (
           <div className="space-y-6 animate-in zoom-in-95">
-             <div className="glass-premium text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-               <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
+             <div className="glass-premium text-white p-8 rounded-[3rem] shadow-2xl relative overflow-hidden border-orange-500/20">
+               <div className="absolute -top-10 -right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl"></div>
                <div className="flex justify-between items-end mb-6">
                  <div>
-                   <h2 className="text-4xl font-black italic mb-1">Nível {gamification.level}</h2>
-                   <p className="text-indigo-300 font-bold text-xs uppercase tracking-widest">Guardião da Paz</p>
+                   <h2 className="text-4xl font-black italic mb-1">Elite Nível {gamification.level}</h2>
+                   <p className="text-orange-300 font-bold text-xs uppercase tracking-widest">Resiliência Pelicano</p>
                  </div>
-                 <span className="text-6xl animate-bounce">🏆</span>
+                 <span className="text-6xl animate-bounce">🦅</span>
                </div>
                <div className="space-y-3">
                  <div className="flex justify-between text-[10px] font-bold tracking-widest uppercase">
-                   <span>Resiliência Financeira</span>
+                   <span>Progresso de Prosperidade</span>
                    <span>{gamification.xp} / {gamification.nextLevelXp} XP</span>
                  </div>
                  <div className="h-5 bg-white/10 rounded-full overflow-hidden p-1">
                     <div 
-                      className="h-full bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.5)] transition-all duration-1000"
+                      className="h-full bg-orange-400 rounded-full shadow-[0_0_15px_rgba(251,146,60,0.5)] transition-all duration-1000"
                       style={{ width: `${(gamification.xp / gamification.nextLevelXp) * 100}%` }}
                     ></div>
                  </div>
@@ -153,7 +132,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-24 md:pb-0 font-['Inter'] selection:bg-indigo-500/30">
+    <div className="min-h-screen flex flex-col pb-24 md:pb-0 font-['Inter'] selection:bg-orange-500/30">
       <Header onMenuClick={() => setIsSidebarOpen(true)} />
       
       <Sidebar 
@@ -169,20 +148,20 @@ const AppContent: React.FC = () => {
 
         {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'dashboard' && (
           <QuickActions 
-            onAddSaving={(amt) => addTransaction(amt, 'saving', 'Gasto evitado')}
-            onAddLoss={(amt) => addTransaction(amt, 'gambling', 'Aposta efetuada')}
+            onAddSaving={(amt) => addTransaction(amt, 'saving', 'Economia registrada')}
+            onAddLoss={(amt) => addTransaction(amt, 'gambling', 'Gasto/Aposta registrada')}
             onOpenCrisis={() => setActiveView('chat')}
           />
         )}
       </main>
 
-      {/* Navigation Inferior Premium */}
+      {/* Navigation Inferior Pelicano */}
       <nav className="fixed bottom-0 left-0 right-0 p-4 md:p-6 z-40 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none">
         <div className="glass-premium rounded-[2.5rem] flex justify-around p-4 shadow-2xl border border-white/10 pointer-events-auto max-w-md mx-auto">
           {[
             { icon: '🏠', view: 'dashboard' as const, label: 'Início' },
             { icon: '🎯', view: 'goals' as const, label: 'Cofre' },
-            { icon: '🛡️', view: 'chat' as const, label: 'Apoio' },
+            { icon: '🦅', view: 'chat' as const, label: 'Estratégia' },
             { icon: '👤', view: 'profile' as const, label: 'Perfil' }
           ].map(item => (
             <button 
@@ -190,14 +169,21 @@ const AppContent: React.FC = () => {
               onClick={() => setActiveView(item.view)}
               className={`flex flex-col items-center gap-1 transition-all duration-500 ${activeView === item.view ? 'scale-110' : 'opacity-40 hover:opacity-100'}`}
             >
-              <div className={`w-12 h-10 rounded-2xl flex items-center justify-center text-xl transition-all ${activeView === item.view ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)]' : 'text-slate-400'}`}>
+              <div className={`w-12 h-10 rounded-2xl flex items-center justify-center text-xl transition-all ${activeView === item.view ? 'bg-orange-500 text-white shadow-[0_0_20px_rgba(251,146,60,0.5)]' : 'text-slate-400'}`}>
                 {item.icon}
               </div>
-              <span className={`text-[9px] font-black uppercase tracking-tighter ${activeView === item.view ? 'text-indigo-400' : 'text-slate-500'}`}>{item.label}</span>
+              <span className={`text-[9px] font-black uppercase tracking-tighter ${activeView === item.view ? 'text-orange-400' : 'text-slate-500'}`}>{item.label}</span>
             </button>
           ))}
         </div>
       </nav>
+      
+      {/* Footer Fixo */}
+      <div className="fixed bottom-2 left-0 right-0 text-center pointer-events-none pb-1">
+        <p className="text-[8px] text-slate-700 italic font-medium tracking-widest opacity-50">
+          by Leandro Dos Santos
+        </p>
+      </div>
     </div>
   );
 };

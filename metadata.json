@@ -1,6 +1,6 @@
 {
-  "name": "VibeCheck - Saúde Financeira e Comportamental",
-  "description": "Um assistente inteligente focado em saúde financeira e comportamental, ajudando a identificar gastos impulsivos e oferecendo suporte em momentos de crise contra vícios em apostas.",
+  "name": "Pelicano Invest - Gestão Patrimonial e Comportamental",
+  "description": "Assistente de inteligência financeira premium que utiliza psicologia comportamental e IA para proteger seu capital e sonhos.",
   "requestFramePermissions": [
     "microphone",
     "camera"
