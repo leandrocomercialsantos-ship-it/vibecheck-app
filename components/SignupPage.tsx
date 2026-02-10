@@ -53,9 +53,9 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 animate-in slide-in-from-right-8 duration-500 relative">
-      {/* Modal de Aviso Legal */}
+      {/* Modal de Aviso Legal com Z-Index 9999 e Scrollbox */}
       {showLegalModal && (
-        <div className="fixed inset-0 z-[250] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[9998] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
           <LegalNotice onClose={() => setShowLegalModal(false)} isModal={true} />
         </div>
       )}

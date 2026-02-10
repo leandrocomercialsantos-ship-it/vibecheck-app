@@ -32,32 +32,33 @@ Assine mentalmente como Pelicano Invest. NUNCA incentive comportamentos de risco
 export const LEGAL_TEXT = {
   title: "Aviso Legal e Termos de Uso",
   version: "Versão Experimental BETA 4.0 - Janeiro 2025",
-  author: "Desenvolvido por Leandro Dos Santos",
+  author: "Projeto Independente Criado por Leandro Dos Santos",
+  intro: "O Pelicano Invest é uma ferramenta experimental de inteligência comportamental financeira em estágio BETA. Ao acessar ou utilizar esta plataforma, você declara estar ciente e concordar com os termos abaixo descritos.",
   sections: [
     {
-      heading: "1. Natureza da Plataforma e Declaração BETA",
-      content: "O Pelicano Invest é uma plataforma digital experimental em estágio BETA. O projeto foi idealizado e desenvolvido de forma independente por Leandro Dos Santos exclusivamente para fins de ENTRETENIMENTO, CONSCIENTIZAÇÃO e EDUCAÇÃO COMPORTAMENTAL. Não se trata de uma ferramenta financeira comercial ou regulamentada."
+      heading: "1. Natureza da Plataforma",
+      content: "O Pelicano Invest foi idealizado e desenvolvido exclusivamente por Leandro Dos Santos para fins de ENTRETENIMENTO, CONSCIENTIZAÇÃO e EDUCAÇÃO COMPORTAMENTAL. O projeto visa auxiliar na identificação de gatilhos emocionais que levam a gastos impulsivos e combater o vício em apostas através de mecanismos de gamificação e inteligência artificial."
     },
     {
-      heading: "2. Isenção de Responsabilidade sobre Patrimônio Real",
-      content: "O Pelicano Invest, sua equipe, criadores ou mantenedores NÃO fornecem consultoria financeira, corretagem de valores ou gestão de investimentos real. Qualquer dado, cálculo ou sugestão de IA apresentada é puramente simulada e educativa. O usuário NÃO deve basear decisões financeiras do mundo real, investimentos ou movimentações patrimoniais nos dados desta plataforma. Patrimônio é coisa séria: consulte sempre profissionais certificados e instituições financeiras regulamentadas antes de qualquer ação real."
+      heading: "2. Isenção Total de Responsabilidade Financeira",
+      content: "IMPORTANTE: O Pelicano Invest NÃO é uma corretora de valores, NÃO é uma instituição financeira regulamentada pelo Banco Central ou CVM, e NÃO fornece consultoria de investimentos real. Qualquer dado, gráfico, cálculo de retorno ou sugestão enviada pela IA Pelicano é meramente simulado, ilustrativo e educativo. Patrimônio é coisa séria: o usuário NÃO deve basear decisões financeiras reais, investimentos ou resgates patrimoniais nos dados gerados nesta plataforma. Leandro Dos Santos, a equipe ou eventuais mantenedores não se responsabilizam por quaisquer atos de investimento, manuseio de dinheiro ou perda de patrimônio por parte do usuário no mundo real."
     },
     {
-      heading: "3. Foco Social: Combate ao Vício em Apostas",
-      content: "Este projeto nasceu com a missão social de auxiliar na identificação de gatilhos emocionais e combater vícios em apostas e gastos impulsivos através da gamificação. O objetivo é ajudar na organização pessoal e na percepção do custo de oportunidade. Entretanto, esta ferramenta não substitui ajuda médica, psicológica ou psiquiátrica especializada. Se você enfrenta problemas com jogos de azar, procure auxílio profissional imediatamente."
+      heading: "3. Caráter BETA e Experimental",
+      content: "A plataforma opera em versão BETA. Funcionalidades, algoritmos e dados podem sofrer alterações drásticas ou remoção sem aviso prévio. O sistema de 'Conexão Bancária' e 'Scanner' são representações visuais destinadas a aprimorar a experiência de usuário (UX) em um ambiente controlado de simulação, sem movimentação real de ativos financeiros."
     },
     {
-      heading: "4. Limitação de Responsabilidade Civil",
-      content: "O criador, Leandro Dos Santos, exime-se de qualquer responsabilidade direta ou indireta por atos de investimento, manuseio de dinheiro ou perda de patrimônio por parte do usuário. Ao utilizar esta simulação, o usuário assume total e exclusiva responsabilidade por suas finanças reais fora deste ambiente de entretenimento."
+      heading: "4. Combate ao Vício e Saúde Mental",
+      content: "A plataforma incentiva a proteção do capital através de reforços positivos. Contudo, o Pelicano Invest não substitui tratamento médico, terapêutico ou psiquiátrico especializado. Usuários com sinais de ludopatia (vício em jogo) são fortemente encorajados a buscar auxílio profissional em centros de saúde especializados."
     },
     {
-      heading: "5. Privacidade e Experiência do Usuário (UX)",
-      content: "Funcionalidades como 'Conexão Bancária' e 'Scanner de Impulso' são representações visuais destinadas a aprimorar a experiência de aprendizado (User Experience). Dados sensíveis bancários não são movimentados e não há conexão real com sistemas de execução financeira de terceiros nesta versão experimental."
+      heading: "5. Direitos Autorais e Propriedade",
+      content: "Toda a identidade visual, lógica de gamificação, o design do Pelicano moderno e o conteúdo textual são de propriedade intelectual exclusiva de Leandro Dos Santos. O uso da plataforma é gratuito para fins educativos e não implica em transferência de qualquer direito de propriedade sobre a ferramenta."
     },
     {
-      heading: "6. Direitos e Propriedade",
-      content: "Toda a identidade visual, lógica de gamificação e textos são de propriedade intelectual de Leandro Dos Santos. O uso da plataforma implica na aceitação plena destes termos de isenção."
+      heading: "6. Aceitação dos Termos",
+      content: "Ao marcar a caixa de seleção no cadastro, o usuário declara ter lido este Aviso Legal na íntegra, compreendido seu caráter experimental e de entretenimento, e isenta o desenvolvedor de qualquer obrigação patrimonial ou cível."
     }
   ],
-  footer: "Educação financeira é o caminho, mas a decisão final é sempre sua. Pelicano Invest Pro © 2025 - Wealth Guardianship."
+  footer: "Educação financeira é o caminho, mas a decisão final é sempre sua. Pelicano Invest Pro © 2025 - Wealth Guardianship - by Leandro Dos Santos."
 };
