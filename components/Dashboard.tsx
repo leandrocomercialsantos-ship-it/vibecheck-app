@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { Transaction, OpportunityItem } from '../types';
-import { OPPORTUNITY_ITEMS } from '../constants';
+import { Transaction } from '../types.ts';
+import { OPPORTUNITY_ITEMS } from '../constants.ts';
+import { useVibe } from '../context/VibeContext.tsx';
 
 interface DashboardProps {
   gamblingTotal: number;
@@ -18,6 +19,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onPanic,
   onScan
 }) => {
+  const { user } = useVibe();
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8 pb-10">
       {/* Panic Button Section */}
@@ -67,7 +70,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700"></div>
           <p className="text-indigo-300 text-[10px] font-black uppercase tracking-[0.2em] mb-2 relative">Dinheiro Salvo ✨</p>
           <h2 className="text-4xl font-black text-emerald-400 relative tracking-tighter">R$ {totalSaved.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
-          <p className="mt-4 text-[10px] text-indigo-300/60 font-medium italic relative">Continue protegendo seus sonhos, Alex.</p>
+          <p className="mt-4 text-[10px] text-indigo-300/60 font-medium italic relative">Continue protegendo seus sonhos, {user.name || 'Guerreiro'}.</p>
         </div>
       </div>
 

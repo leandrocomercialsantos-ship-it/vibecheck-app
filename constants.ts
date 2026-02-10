@@ -1,5 +1,5 @@
 
-import { Goal, OpportunityItem } from './types';
+import { Goal, OpportunityItem } from './types.ts';
 
 export const OPPORTUNITY_ITEMS: OpportunityItem[] = [
   { name: 'Jantares Especiais', cost: 150, icon: '🍽️' },

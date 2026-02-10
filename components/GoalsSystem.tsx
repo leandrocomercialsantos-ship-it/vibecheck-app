@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Goal } from '../types';
+import { Goal } from '../types.ts';
 
 interface GoalsSystemProps {
   goals: Goal[];
