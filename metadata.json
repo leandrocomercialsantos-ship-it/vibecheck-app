@@ -1,0 +1,8 @@
+{
+  "name": "VibeCheck - Saúde Financeira e Comportamental",
+  "description": "Um assistente inteligente focado em saúde financeira e comportamental, ajudando a identificar gastos impulsivos e oferecendo suporte em momentos de crise contra vícios em apostas.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
