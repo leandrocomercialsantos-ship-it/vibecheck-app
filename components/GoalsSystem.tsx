@@ -1,14 +1,18 @@
-
 import React, { useState } from 'react';
 import { useVibe } from '../context/VibeContext.tsx';
+import { Goal } from '../types.ts';
 
 export const GoalsSystem: React.FC = () => {
-  const { goals, addGoal, updateGoalAmount } = useVibe();
+  const { goals, addGoal, updateGoalAmount, renameGoal, deleteGoal } = useVibe();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showInvestModal, setShowInvestModal] = useState<string | null>(null);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   
+  // States para o modal de criação
   const [newName, setNewName] = useState('');
   const [newTarget, setNewTarget] = useState('');
+
+  // States para o modal de edição/gerenciamento
+  const [editName, setEditName] = useState('');
   const [investValue, setInvestValue] = useState('');
 
   const handleCreateGoal = (e: React.FormEvent) => {
@@ -20,21 +24,39 @@ export const GoalsSystem: React.FC = () => {
     setShowAddModal(false);
   };
 
-  const handleInvest = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!showInvestModal || !investValue) return;
-    updateGoalAmount(showInvestModal, parseFloat(investValue));
+  const openEditModal = (goal: Goal) => {
+    setEditingGoal(goal);
+    setEditName(goal.name);
     setInvestValue('');
-    setShowInvestModal(null);
+  };
+
+  const handleUpdateGoal = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGoal) return;
+
+    // Atualiza nome se mudou
+    if (editName.trim() && editName !== editingGoal.name) {
+      renameGoal(editingGoal.id, editName);
+    }
+
+    // Adiciona saldo se houver valor
+    const amountToAdd = parseFloat(investValue);
+    if (!isNaN(amountToAdd) && amountToAdd > 0) {
+      updateGoalAmount(editingGoal.id, amountToAdd);
+    }
+
+    setEditingGoal(null);
   };
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-8 pb-24">
       
       {/* Header Section */}
-      <div className="space-y-2 px-2">
-        <h2 className="text-3xl font-black text-white tracking-tight">Cofre de Sonhos 🎯</h2>
-        <p className="text-slate-400 font-medium">Transforme economias em conquistas reais.</p>
+      <div className="space-y-2 px-2 flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-black text-white tracking-tight">Cofre de Sonhos 🎯</h2>
+          <p className="text-slate-400 font-medium">Clique em uma meta para gerenciar.</p>
+        </div>
       </div>
 
       {/* Goals Content */}
@@ -59,19 +81,28 @@ export const GoalsSystem: React.FC = () => {
           <div className="grid grid-cols-1 gap-6">
             {goals.map((goal) => {
               const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
+              const isCompleted = progress >= 100;
+              
               return (
-                <div key={goal.id} className="glass-premium p-8 rounded-[2.5rem] space-y-6 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-1000"></div>
+                <div 
+                  key={goal.id} 
+                  onClick={() => openEditModal(goal)}
+                  className={`glass-premium p-8 rounded-[2.5rem] space-y-6 relative overflow-hidden group cursor-pointer transition-all hover:bg-white/[0.05] active:scale-[0.99] border-2 ${isCompleted ? 'border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.2)]' : 'border-white/5'}`}
+                >
+                  <div className={`absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-1000 ${isCompleted ? 'bg-amber-400/10' : 'bg-indigo-500/5'}`}></div>
                   
                   <div className="flex justify-between items-start relative z-10">
                     <div className="space-y-1">
-                      <h4 className="text-xl font-bold text-white tracking-tight">{goal.name}</h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-xl font-bold text-white tracking-tight">{goal.name}</h4>
+                        {isCompleted && <span className="text-xl animate-bounce">🏆</span>}
+                      </div>
                       <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
                         Objetivo: R$ {goal.targetAmount.toLocaleString('pt-BR')}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">
+                      <span className={`text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r ${isCompleted ? 'from-amber-300 to-amber-500' : 'from-indigo-400 to-violet-400'}`}>
                         {Math.round(progress)}%
                       </span>
                     </div>
@@ -80,23 +111,14 @@ export const GoalsSystem: React.FC = () => {
                   <div className="space-y-3 relative z-10">
                     <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
                       <span>R$ {goal.currentAmount.toLocaleString('pt-BR')}</span>
-                      <span>Restam R$ {(goal.targetAmount - goal.currentAmount).toLocaleString('pt-BR')}</span>
+                      <span>{isCompleted ? 'CONCLUÍDO' : `Restam R$ ${(goal.targetAmount - goal.currentAmount).toLocaleString('pt-BR')}`}</span>
                     </div>
                     <div className="h-4 bg-white/5 rounded-full overflow-hidden p-1">
                       <div 
-                        className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full shadow-[0_0_15px_rgba(99,102,241,0.5)] transition-all duration-1000 ease-out"
+                        className={`h-full rounded-full transition-all duration-1000 ease-out ${isCompleted ? 'bg-gradient-to-r from-amber-400 to-orange-500 shadow-[0_0_15px_rgba(251,191,36,0.5)]' : 'bg-gradient-to-r from-indigo-500 to-violet-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]'}`}
                         style={{ width: `${progress}%` }}
                       ></div>
                     </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <button 
-                      onClick={() => setShowInvestModal(goal.id)}
-                      className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-bold text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
-                    >
-                      <span>💰</span> ADICIONAR SALDO
-                    </button>
                   </div>
                 </div>
               );
@@ -113,25 +135,7 @@ export const GoalsSystem: React.FC = () => {
         )}
       </div>
 
-      {/* Success Tip */}
-      <div className="glass-premium p-8 rounded-[2.5rem] border-indigo-500/20 flex gap-6 items-center">
-        <div className="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center text-3xl">💡</div>
-        <div>
-          <h4 className="font-bold text-white mb-1">Dica de Sucesso</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">
-            Sempre que vencer um impulso, adicione o valor aqui. Ver o progresso real libera mais dopamina que o ganho fácil das apostas.
-          </p>
-        </div>
-      </div>
-
-      {/* Credits */}
-      <div className="text-center pt-4">
-        <p className="text-[10px] text-slate-600 italic font-medium tracking-widest">
-          by Leandro Dos Santos
-        </p>
-      </div>
-
-      {/* MODAL: Add New Goal */}
+      {/* MODAL: Criar Nova Meta */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
           <div className="glass-premium p-8 rounded-[3rem] w-full max-w-sm border-indigo-500/30 animate-in zoom-in-95">
@@ -180,37 +184,68 @@ export const GoalsSystem: React.FC = () => {
         </div>
       )}
 
-      {/* MODAL: Add Money to Goal */}
-      {showInvestModal && (
+      {/* MODAL: Gerenciar Meta (Edit/Invest/Delete) */}
+      {editingGoal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-          <div className="glass-premium p-8 rounded-[3rem] w-full max-w-sm border-emerald-500/30 animate-in zoom-in-95">
-            <h3 className="text-2xl font-black text-white mb-2 text-center">Alimentar Sonho 💰</h3>
-            <p className="text-slate-500 text-xs text-center mb-8">Quanto você salvou hoje?</p>
-            <form onSubmit={handleInvest} className="space-y-6">
-              <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-emerald-400 font-black text-xl">R$</span>
+          <div className="glass-premium p-8 rounded-[3rem] w-full max-w-sm border-white/10 animate-in zoom-in-95">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-black text-white">Gerenciar Meta</h3>
+              <button 
+                // Fix: explicit check of the return value from deleteGoal to avoid testing 'void' for truthiness
+                onClick={() => {
+                  if (deleteGoal(editingGoal.id)) {
+                    setEditingGoal(null);
+                  }
+                }}
+                className="text-rose-400 hover:text-rose-500 p-2"
+                title="Excluir Meta"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateGoal} className="space-y-6">
+              {/* Renomear */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Nome da Meta</label>
                 <input 
-                  autoFocus
-                  type="number"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-6 pl-16 text-white font-black text-3xl outline-none focus:border-emerald-500 transition-all"
-                  placeholder="0.00"
-                  value={investValue}
-                  onChange={(e) => setInvestValue(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-indigo-500 transition-all"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
                 />
               </div>
+
+              {/* Adicionar Saldo */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-emerald-400 uppercase tracking-widest ml-1">Adicionar Saldo 💰</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400 font-black">R$</span>
+                  <input 
+                    type="number"
+                    className="w-full bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 pl-10 text-emerald-400 font-black text-xl outline-none focus:border-emerald-500 transition-all"
+                    placeholder="0.00"
+                    value={investValue}
+                    onChange={(e) => setInvestValue(e.target.value)}
+                  />
+                </div>
+                <p className="text-[9px] text-slate-500 ml-1">Saldo atual: R$ {editingGoal.currentAmount.toLocaleString('pt-BR')}</p>
+              </div>
+
               <div className="flex gap-3 pt-4">
                 <button 
                   type="button"
-                  onClick={() => setShowInvestModal(null)}
+                  onClick={() => setEditingGoal(null)}
                   className="flex-1 py-4 text-slate-400 font-bold hover:text-white transition-colors"
                 >
-                  Cancelar
+                  Fechar
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 py-4 bg-emerald-500 text-emerald-950 font-black rounded-2xl shadow-xl hover:bg-emerald-400 transition-all"
+                  className="flex-1 py-4 bg-white text-slate-950 font-black rounded-2xl shadow-xl hover:bg-slate-100 transition-all"
                 >
-                  INVESTIR
+                  SALVAR
                 </button>
               </div>
             </form>
@@ -218,6 +253,12 @@ export const GoalsSystem: React.FC = () => {
         </div>
       )}
 
+      {/* Credits */}
+      <div className="text-center pt-4">
+        <p className="text-[10px] text-slate-600 italic font-medium tracking-widest">
+          by Leandro Dos Santos
+        </p>
+      </div>
     </div>
   );
 };

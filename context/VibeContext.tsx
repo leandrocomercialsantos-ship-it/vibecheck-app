@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types.ts';
 
@@ -10,6 +9,9 @@ interface VibeContextType {
   goals: Goal[];
   addGoal: (name: string, targetAmount: number) => void;
   updateGoalAmount: (goalId: string, amount: number) => void;
+  renameGoal: (goalId: string, newName: string) => void;
+  // Fix: changed return type to boolean to allow the caller to know if the deletion was confirmed/successful
+  deleteGoal: (goalId: string) => boolean;
   voiceSettings: VoiceSettings;
   setVoiceSettings: (settings: VoiceSettings) => void;
   gamification: Gamification;
@@ -43,7 +45,6 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const [goals, setGoals] = useState<Goal[]>(() => {
     const saved = localStorage.getItem(GOALS_KEY);
-    // Iniciar vazio se não houver nada salvo, conforme solicitado
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -90,7 +91,6 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         : goal
     ));
     
-    // Ganhar XP ao investir em metas
     setGamification(prev => {
       const newXp = prev.xp + 25;
       if (newXp >= prev.nextLevelXp) {
@@ -103,6 +103,21 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       return { ...prev, xp: newXp };
     });
+  };
+
+  const renameGoal = (goalId: string, newName: string) => {
+    setGoals(prev => prev.map(goal => 
+      goal.id === goalId ? { ...goal, name: newName } : goal
+    ));
+  };
+
+  // Fix: changed return type to boolean to allow the caller to know if the deletion was confirmed/successful
+  const deleteGoal = (goalId: string): boolean => {
+    if (confirm("Tem certeza que deseja excluir esta meta permanentemente?")) {
+      setGoals(prev => prev.filter(goal => goal.id !== goalId));
+      return true;
+    }
+    return false;
   };
 
   const addTransaction = (amount: number, type: Transaction['type'], description: string) => {
@@ -140,7 +155,7 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <VibeContext.Provider value={{
       user, setUser,
       transactions, addTransaction,
-      goals, addGoal, updateGoalAmount,
+      goals, addGoal, updateGoalAmount, renameGoal, deleteGoal,
       voiceSettings, setVoiceSettings,
       gamification, setGamification
     }}>
