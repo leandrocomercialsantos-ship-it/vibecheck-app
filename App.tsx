@@ -19,7 +19,10 @@ type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-v
 type AppState = 'landing' | 'signup' | 'main';
 
 const AppContent: React.FC = () => {
-  const [appState, setAppState] = useState<AppState>('landing');
+  const [appState, setAppState] = useState<AppState>(() => {
+    const saved = localStorage.getItem('vibecheck_user_data');
+    return saved && JSON.parse(saved).name ? 'main' : 'landing';
+  });
   const [activeView, setActiveView] = useState<View>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
@@ -32,10 +35,10 @@ const AppContent: React.FC = () => {
   } = useVibe();
 
   useEffect(() => {
-    if (appState === 'main') {
+    if (appState === 'main' && user.name) {
       speak(`Olá ${user.name}! Sou o seu Guardião. Como está o seu equilíbrio financeiro hoje?`, voiceSettings);
     }
-  }, [appState, user.name, voiceSettings]);
+  }, [appState]);
 
   const handlePanic = () => {
     speak("Ei, respira fundo. Antes de apostar, vamos conversar por 30 segundos?", voiceSettings);
@@ -71,6 +74,17 @@ const AppContent: React.FC = () => {
   if (appState === 'landing') return <LandingPage onStart={() => setAppState('signup')} />;
   if (appState === 'signup') return <SignupPage onComplete={() => setAppState('main')} />;
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUser(prev => ({ ...prev, avatar: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const renderView = () => {
     switch (activeView) {
       case 'dashboard':
@@ -94,23 +108,38 @@ const AppContent: React.FC = () => {
       case 'profile':
         return (
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 animate-in fade-in shadow-sm">
-            <h2 className="text-2xl font-bold mb-6 text-slate-800">Seu Perfil</h2>
-            <div className="space-y-6">
-              <div className="flex items-center gap-6">
-                <img src={user.avatar} className="w-24 h-24 rounded-3xl border-4 border-slate-50 shadow-lg" alt="Profile" />
-                <button className="text-indigo-600 font-bold hover:underline">Mudar Foto</button>
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Seu Nome</label>
-                <input 
-                  className="w-full p-5 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
-                  value={user.name} 
-                  onChange={e => setUser({...user, name: e.target.value})}
-                />
+            <h2 className="text-2xl font-bold mb-6 text-slate-800">Meu Perfil</h2>
+            <div className="space-y-6 text-center">
+              <div className="relative w-32 h-32 mx-auto">
+                <img src={user.avatar} className="w-full h-full rounded-[2rem] object-cover border-4 border-slate-50 shadow-xl" alt="Profile" />
+                <label className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-2 rounded-xl shadow-lg cursor-pointer hover:bg-indigo-700 transition-colors">
+                  📸
+                  <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                </label>
               </div>
               
+              <div className="space-y-4 text-left">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Nome de Exibição</label>
+                  <input 
+                    className="w-full p-5 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium" 
+                    value={user.name} 
+                    onChange={e => setUser({...user, name: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                  <input 
+                    className="w-full p-5 bg-slate-50 rounded-2xl border-none font-medium opacity-60 cursor-not-allowed" 
+                    value={user.email} 
+                    readOnly
+                  />
+                </div>
+              </div>
+
               <div className="pt-6 border-t border-slate-100">
-                <h3 className="font-bold text-slate-800 mb-4">Open Finance 🔒</h3>
+                <h3 className="font-bold text-slate-800 mb-4 text-left">Open Finance 🔒</h3>
                 <button 
                   onClick={() => setUser({...user, isBankConnected: !user.isBankConnected})}
                   className={`w-full py-5 rounded-2xl font-bold transition-all flex items-center justify-center gap-3 ${user.isBankConnected ? 'bg-emerald-50 text-emerald-600 border-2 border-emerald-100' : 'bg-slate-900 text-white shadow-lg'}`}
@@ -121,7 +150,6 @@ const AppContent: React.FC = () => {
                     <><span>🏦</span> Conectar via Open Finance</>
                   )}
                 </button>
-                <p className="text-[10px] text-slate-400 mt-2 text-center uppercase tracking-widest font-bold">Alertas automáticos de depósitos em bets</p>
               </div>
             </div>
           </div>
@@ -141,18 +169,6 @@ const AppContent: React.FC = () => {
                     {p === 'friendly' ? 'Amigável' : p === 'firm' ? 'Firme' : 'Engraçado'}
                   </button>
                 ))}
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-end px-1">
-                   <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Velocidade da Voz</label>
-                   <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">{voiceSettings.rate}x</span>
-                </div>
-                <input 
-                  type="range" min="0.5" max="2" step="0.1" 
-                  className="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                  value={voiceSettings.rate}
-                  onChange={e => setVoiceSettings({...voiceSettings, rate: parseFloat(e.target.value)})}
-                />
               </div>
             </div>
           </div>
@@ -180,8 +196,8 @@ const AppContent: React.FC = () => {
                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
                <div className="flex justify-between items-end mb-6">
                  <div>
-                   <h2 className="text-4xl font-black italic mb-1">Rank: Ouro II</h2>
-                   <p className="text-indigo-300 font-bold text-xs uppercase tracking-widest">Próximo: Platina I</p>
+                   <h2 className="text-4xl font-black italic mb-1">Nível {gamification.level}</h2>
+                   <p className="text-indigo-300 font-bold text-xs uppercase tracking-widest">Guardião da Paz</p>
                  </div>
                  <span className="text-6xl animate-bounce">🏆</span>
                </div>
@@ -230,7 +246,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8 pb-20">
         {renderView()}
 
-        {activeView !== 'scanner' && (
+        {activeView !== 'scanner' && activeView !== 'profile' && (
           <QuickActions 
             onAddSaving={(amt) => addTransaction(amt, 'saving', 'Gasto evitado')}
             onAddLoss={(amt) => addTransaction(amt, 'gambling', 'Aposta efetuada')}
@@ -239,7 +255,6 @@ const AppContent: React.FC = () => {
         )}
       </main>
 
-      {/* Modern Bottom Tab Bar */}
       <nav className="fixed bottom-0 left-0 right-0 p-4 md:hidden z-40">
         <div className="glass rounded-[2rem] flex justify-around p-3 shadow-2xl border border-white/20">
           {[

@@ -11,6 +11,9 @@ export const RealityReport: React.FC = () => {
     
   const impulsesAvoided = transactions.filter(t => t.type === 'saving').length;
   
+  // Hypothetical "Life Quality" metric: assume R$ 50 = 1 day of stress-free living
+  const lifeDaysGained = Math.floor(savedThisMonth / 50);
+  
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-10">
       <div className="bg-indigo-900 text-white p-8 rounded-[3rem] shadow-2xl relative overflow-hidden">
@@ -30,33 +33,32 @@ export const RealityReport: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white border-2 border-slate-100 p-8 rounded-[3rem] space-y-6">
+      <div className="bg-white border-2 border-slate-100 p-8 rounded-[3rem] space-y-6 shadow-sm">
+        <div className="flex items-center gap-4 bg-teal-50 p-6 rounded-3xl border border-teal-100">
+          <div className="text-4xl">⏳</div>
+          <div>
+            <h4 className="text-teal-900 font-bold">Tempo de Vida Ganho</h4>
+            <p className="text-sm text-teal-700">Com suas economias, você ganhou <strong>{lifeDaysGained} dias</strong> de tranquilidade financeira.</p>
+          </div>
+        </div>
+
         <h3 className="text-xl font-bold text-slate-800">Seu Dinheiro virou Realidade ✨</h3>
         
         <div className="space-y-4">
           <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm">🏥</div>
             <div className="flex-1">
-              <p className="text-sm font-bold text-slate-700">Plano de Saúde</p>
-              <p className="text-xs text-slate-500">Garantido com as economias</p>
+              <p className="text-sm font-bold text-slate-700">Segurança Básica</p>
+              <p className="text-xs text-slate-500">Valor equivalente a planos essenciais</p>
             </div>
-            <div className="text-emerald-500 font-black">PAGO</div>
+            <div className="text-emerald-500 font-black">CONQUISTADO</div>
           </div>
           
           <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm">🍎</div>
+            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm">📺</div>
             <div className="flex-1">
-              <p className="text-sm font-bold text-slate-700">Feira da Semana</p>
-              <p className="text-xs text-slate-500">Alimentação de qualidade</p>
-            </div>
-            <div className="text-emerald-500 font-black">PAGO</div>
-          </div>
-          
-          <div className="flex items-center gap-4 p-4 border-2 border-dashed border-slate-200 rounded-2xl">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm">🌟</div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-slate-400">Restante para Sonhos</p>
-              <p className="text-xs text-slate-400">R$ {Math.max(0, savedThisMonth - 350).toLocaleString('pt-BR')}</p>
+              <p className="text-sm font-bold text-slate-700">Lazer Tangível</p>
+              <p className="text-xs text-slate-500">Isso pagaria {Math.floor(savedThisMonth / 40)} meses de Streaming</p>
             </div>
           </div>
         </div>

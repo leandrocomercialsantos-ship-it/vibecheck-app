@@ -11,6 +11,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onAddSaving, onAddLo
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState<'saving' | 'loss' | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleConfirm = () => {
     const amount = parseFloat(inputValue);
@@ -22,6 +23,16 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onAddSaving, onAddLo
     setInputValue('');
     setShowModal(null);
     setIsOpen(false);
+  };
+
+  const handleVoiceInput = () => {
+    setIsRecording(true);
+    // Simulate speech-to-text
+    setTimeout(() => {
+      setInputValue('50');
+      setIsRecording(false);
+      alert('IA: Ouvi "Cinquenta Reais". Adicionando ao valor!');
+    }, 2000);
   };
 
   return (
@@ -43,7 +54,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onAddSaving, onAddLo
             </button>
             <button 
               onClick={onOpenCrisis}
-              className="bg-orange-500 text-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-2 hover:bg-orange-600 transition-all"
+              className="bg-orange-500 text-white px-4 py-2 rounded-2xl shadow-lg flex items-center gap-2 hover:bg-orange-600 transition-all animate-pulse"
             >
               <span>❤️ SOS Crise</span>
             </button>
@@ -57,13 +68,21 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onAddSaving, onAddLo
         </button>
       </div>
 
-      {/* Modal Overlay */}
       {showModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-sm animate-in zoom-in-95 duration-200">
-            <h3 className="text-xl font-bold text-slate-800 mb-2">
-              {showModal === 'saving' ? 'Parabéns pela economia! ✨' : 'Vamos registrar isso. ✍️'}
-            </h3>
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm animate-in zoom-in-95 duration-200 shadow-2xl">
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="text-xl font-bold text-slate-800">
+                {showModal === 'saving' ? 'Parabéns pela economia! ✨' : 'Vamos registrar isso. ✍️'}
+              </h3>
+              <button 
+                onClick={handleVoiceInput}
+                className={`p-2 rounded-full transition-all ${isRecording ? 'bg-rose-100 text-rose-500 animate-pulse' : 'bg-slate-100 text-slate-400'}`}
+                title="Falar valor"
+              >
+                🎙️
+              </button>
+            </div>
             <p className="text-sm text-slate-500 mb-4">
               {showModal === 'saving' 
                 ? 'Qual o valor que você deixou de gastar/apostar agora?' 

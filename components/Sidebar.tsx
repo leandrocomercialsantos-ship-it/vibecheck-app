@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { UserProfile, Gamification } from '../types';
+import { UserProfile, Gamification } from '../types.ts';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,6 +15,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
 
   const menuItems = [
     { label: 'Início', icon: '📊', view: 'dashboard' },
+    { label: 'Meu Perfil', icon: '👤', view: 'profile' },
     { label: 'Cofre de Sonhos', icon: '🎯', view: 'goals' },
     { label: 'Comunidade Guardiã', icon: '🌍', view: 'community' },
     { label: 'Relatório de Realidade', icon: '📈', view: 'report' },
@@ -33,7 +34,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
         className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-[70] transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="p-8 bg-indigo-700 text-white relative overflow-hidden">
-          {/* Logo element from prompt description (Shield -> Growth) */}
           <div className="absolute -right-4 -bottom-4 opacity-10">
             <svg width="120" height="120" viewBox="0 0 24 24" fill="white">
               <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
@@ -42,14 +42,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
           
           <button 
             onClick={() => onNavigate('profile')}
-            className="flex items-center gap-4 mb-4 text-left group relative z-10"
+            className="flex items-center gap-4 mb-4 text-left group relative z-10 w-full"
           >
             <div className="w-16 h-16 rounded-2xl border-2 border-white/20 overflow-hidden shadow-lg group-hover:scale-105 transition-transform">
-              <img src={user.avatar} alt="Avatar" />
+              <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
             </div>
             <div>
-              <h3 className="text-xl font-bold">{user.name}</h3>
-              <p className="text-indigo-200 text-xs">{user.vibe}</p>
+              <h3 className="text-xl font-bold truncate max-w-[140px]">{user.name || 'Bem-vindo'}</h3>
+              <p className="text-indigo-200 text-xs truncate max-w-[140px]">{user.vibe}</p>
             </div>
           </button>
           
@@ -82,51 +82,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, u
                 <span className="text-sm">{item.label}</span>
               </button>
             ))}
-
-            <div className="pt-2">
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-700 hover:bg-indigo-50 transition-colors font-medium group"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="text-xl group-hover:rotate-45 transition-transform">⚙️</span>
-                  <span className="text-sm text-indigo-900 font-bold">Configurações</span>
-                </div>
-                <svg className={`w-4 h-4 transition-transform ${showSettings ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              <div className={`overflow-hidden transition-all duration-300 ${showSettings ? 'max-h-80 mt-1 bg-slate-50 rounded-2xl p-1' : 'max-h-0'}`}>
-                {[
-                  { label: 'Voz da IA', icon: '🎙️', view: 'settings-voice' },
-                  { label: 'Anjo da Guarda', icon: '👼', view: 'settings-guardian' },
-                  { label: 'Conectar Banco', icon: '🏦', view: 'profile' },
-                  { label: 'Notificações', icon: '🔔' },
-                ].map((item, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => { if(item.view) onNavigate(item.view); onClose(); }}
-                    className="w-full flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-indigo-600 transition-colors text-xs font-semibold"
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 px-4 border-t border-slate-100 pt-4">
-            <button className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-rose-600 hover:bg-rose-50 transition-colors font-medium">
-              <span className="text-xl">🚪</span>
-              <span className="text-sm">Sair</span>
-            </button>
           </div>
         </nav>
 
         <div className="p-6 border-t border-slate-100 text-center">
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">VibeCheck Finance v3.0</p>
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">VibeCheck Finance v3.1</p>
         </div>
       </aside>
     </>

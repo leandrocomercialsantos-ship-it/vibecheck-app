@@ -29,6 +29,7 @@ export interface ChatMessage {
 
 export interface UserProfile {
   name: string;
+  email: string;
   avatar: string;
   vibe: string;
   guardianContact: string;

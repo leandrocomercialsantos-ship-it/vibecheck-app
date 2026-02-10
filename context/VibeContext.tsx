@@ -1,11 +1,11 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types.ts';
 import { INITIAL_GOALS } from '../constants.ts';
 
 interface VibeContextType {
   user: UserProfile;
-  setUser: (user: UserProfile) => void;
+  setUser: React.Dispatch<React.SetStateAction<UserProfile>>;
   transactions: Transaction[];
   addTransaction: (amount: number, type: Transaction['type'], description: string) => void;
   goals: Goal[];
@@ -17,13 +17,19 @@ interface VibeContextType {
 
 const VibeContext = createContext<VibeContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'vibecheck_user_data';
+
 export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile>({
-    name: 'Alex Silva',
-    avatar: 'https://picsum.photos/seed/vibecheck/100/100',
-    vibe: 'Em busca de equilíbrio 🌿',
-    guardianContact: '',
-    isBankConnected: false,
+  const [user, setUser] = useState<UserProfile>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {
+      name: '',
+      email: '',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=vibe',
+      vibe: 'Iniciando jornada 🛡️',
+      guardianContact: '',
+      isBankConnected: false,
+    };
   });
 
   const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>({
@@ -33,14 +39,18 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   const [gamification, setGamification] = useState<Gamification>({
-    level: 3,
-    xp: 450,
-    nextLevelXp: 1000,
-    badges: ['Primeiro Dia', 'Resiliente'],
+    level: 1,
+    xp: 0,
+    nextLevelXp: 100,
+    badges: [],
   });
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [goals, setGoals] = useState<Goal[]>(INITIAL_GOALS);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  }, [user]);
 
   const addTransaction = (amount: number, type: Transaction['type'], description: string) => {
     const newTransaction: Transaction = {
@@ -57,10 +67,18 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         ...goal,
         currentAmount: goal.currentAmount + (amount / prevGoals.length)
       })));
-      setGamification(prev => ({
-        ...prev,
-        xp: prev.xp + 50
-      }));
+      setGamification(prev => {
+        const newXp = prev.xp + 50;
+        if (newXp >= prev.nextLevelXp) {
+          return {
+            ...prev,
+            level: prev.level + 1,
+            xp: newXp - prev.nextLevelXp,
+            nextLevelXp: prev.nextLevelXp + 150
+          };
+        }
+        return { ...prev, xp: newXp };
+      });
     } else {
       setGamification(prev => ({
         ...prev,
