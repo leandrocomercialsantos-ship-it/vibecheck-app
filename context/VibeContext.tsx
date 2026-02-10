@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types';
-import { INITIAL_GOALS } from '../constants';
+import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types.ts';
+import { INITIAL_GOALS } from '../constants.ts';
 
 interface VibeContextType {
   user: UserProfile;

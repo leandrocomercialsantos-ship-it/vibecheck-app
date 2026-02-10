@@ -1,18 +1,19 @@
 
 import React, { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { Dashboard } from './components/Dashboard';
-import { CrisisChat } from './components/CrisisChat';
-import { GoalsSystem } from './components/GoalsSystem';
-import { QuickActions } from './components/QuickActions';
-import { LandingPage } from './components/LandingPage';
-import { SignupPage } from './components/SignupPage';
-import { Sidebar } from './components/Sidebar';
-import { Scanner } from './components/Scanner';
-import { RealityReport } from './components/RealityReport';
-import { CommunityFeed } from './components/CommunityFeed';
-import { VibeProvider, useVibe } from './context/VibeContext';
-import { speak } from './services/speech';
+import { Header } from './components/Header.tsx';
+import { Dashboard } from './components/Dashboard.tsx';
+import { CrisisChat } from './components/CrisisChat.tsx';
+import { GoalsSystem } from './components/GoalsSystem.tsx';
+import { QuickActions } from './components/QuickActions.tsx';
+import { LandingPage } from './components/LandingPage.tsx';
+import { SignupPage } from './components/SignupPage.tsx';
+import { Sidebar } from './components/Sidebar.tsx';
+import { Scanner } from './components/Scanner.tsx';
+import { RealityReport } from './components/RealityReport.tsx';
+import { CommunityFeed } from './components/CommunityFeed.tsx';
+import { VibeProvider, useVibe } from './context/VibeContext.tsx';
+import { speak } from './services/speech.ts';
+import { Transaction, Goal, UserProfile, VoiceSettings, Gamification } from './types.ts';
 
 type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'settings-guardian' | 'gamification' | 'report' | 'community';
 type AppState = 'landing' | 'signup' | 'main';
@@ -34,7 +35,7 @@ const AppContent: React.FC = () => {
     if (appState === 'main') {
       speak(`Olá ${user.name}! Sou o seu Guardião. Como está o seu equilíbrio financeiro hoje?`, voiceSettings);
     }
-  }, [appState]);
+  }, [appState, user.name, voiceSettings]);
 
   const handlePanic = () => {
     speak("Ei, respira fundo. Antes de apostar, vamos conversar por 30 segundos?", voiceSettings);
@@ -96,7 +97,7 @@ const AppContent: React.FC = () => {
             <h2 className="text-2xl font-bold mb-6 text-slate-800">Seu Perfil</h2>
             <div className="space-y-6">
               <div className="flex items-center gap-6">
-                <img src={user.avatar} className="w-24 h-24 rounded-3xl border-4 border-slate-50 shadow-lg" />
+                <img src={user.avatar} className="w-24 h-24 rounded-3xl border-4 border-slate-50 shadow-lg" alt="Profile" />
                 <button className="text-indigo-600 font-bold hover:underline">Mudar Foto</button>
               </div>
               <div className="space-y-2">

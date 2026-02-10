@@ -1,8 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { getCrisisSupportResponse } from '../services/gemini';
-import { ChatMessage, VoiceSettings } from '../types';
-import { speak } from '../services/speech';
+import { getCrisisSupportResponse } from '../services/gemini.ts';
+import { ChatMessage, VoiceSettings } from '../types.ts';
+import { speak } from '../services/speech.ts';
 
 interface CrisisChatProps {
   voiceSettings: VoiceSettings;

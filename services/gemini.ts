@@ -1,9 +1,9 @@
 
 import { GoogleGenAI } from "@google/genai";
-import { SYSTEM_INSTRUCTION } from "../constants";
+import { SYSTEM_INSTRUCTION } from "../constants.ts";
 
 export const getCrisisSupportResponse = async (userMessage: string, history: { role: 'user' | 'model', parts: { text: string }[] }[]) => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   try {
     const response = await ai.models.generateContent({

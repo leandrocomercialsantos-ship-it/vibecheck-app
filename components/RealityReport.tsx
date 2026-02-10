@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useVibe } from '../context/VibeContext';
+import { useVibe } from '../context/VibeContext.tsx';
 
 export const RealityReport: React.FC = () => {
   const { transactions } = useVibe();
