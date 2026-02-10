@@ -7,80 +7,133 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
-      {/* Background blobs for aesthetic appeal */}
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500/30">
+      {/* Sophisticated Background Effects */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-indigo-100 rounded-full blur-[100px] opacity-60"></div>
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-teal-50 rounded-full blur-[100px] opacity-60"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-900/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-slate-900/30 rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500/5 via-transparent to-transparent"></div>
       </div>
 
-      <div className="max-w-xl w-full text-center space-y-10">
-        {/* Logo Section */}
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center text-white font-bold text-4xl shadow-2xl shadow-indigo-200 animate-bounce [animation-duration:3s]">
+      {/* Hero Section */}
+      <section className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-12 relative">
+        {/* Logo Section - Centered at the Top of Hero */}
+        <div className="flex flex-col items-center gap-6 animate-in fade-in slide-in-from-top-10 duration-1000">
+          <div className="w-24 h-24 bg-gradient-to-br from-indigo-600 to-violet-700 rounded-[2rem] flex items-center justify-center text-white font-bold text-5xl shadow-[0_0_50px_rgba(79,70,229,0.3)] hover:scale-105 transition-transform cursor-default">
             V
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">VibeCheck Finance</h2>
-        </div>
-
-        {/* Title & Subtitle */}
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-            Seu Guardião <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">
-              Financeiro Inteligente
-            </span>
-          </h1>
-          <p className="text-lg text-slate-600 max-w-md mx-auto leading-relaxed">
-            Pare de perder dinheiro em micro-gastos e impulsos. Reconquiste sua paz financeira com apoio real.
-          </p>
-        </div>
-
-        {/* Abstract Illustration Placeholder */}
-        <div className="relative h-48 w-full flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center justify-center opacity-20">
-            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-64 h-64">
-              <path fill="#4F46E5" d="M44.7,-76.4C58.1,-69.2,69.5,-57.4,77.3,-43.8C85.1,-30.2,89.2,-15.1,88.4,-0.5C87.5,14.1,81.7,28.2,73.4,40.8C65.1,53.4,54.3,64.5,41.4,72.2C28.5,79.8,14.2,84.1,-0.6,85.1C-15.4,86.2,-30.7,84.1,-44.2,77C-57.6,69.9,-69.1,57.9,-77.1,44.1C-85.1,30.3,-89.6,14.7,-88.7,0.5C-87.8,-13.7,-81.4,-26.5,-73.1,-37.9C-64.8,-49.3,-54.6,-59.4,-42.6,-67.4C-30.6,-75.4,-15.3,-81.4,0.3,-82C15.9,-82.5,31.3,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
-            </svg>
+          <div className="space-y-1">
+            <h2 className="text-3xl font-black tracking-tighter text-white">VibeCheck</h2>
+            <p className="text-indigo-400 font-bold text-xs uppercase tracking-[0.3em]">Finance Elite</p>
           </div>
-          <div className="z-10 bg-white/40 backdrop-blur-md p-6 rounded-3xl border border-white/50 shadow-xl flex gap-4 items-center">
-            <div className="text-4xl">🌱</div>
-            <div className="text-left">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Saldo de Liberdade</p>
-              <p className="text-2xl font-bold text-slate-800">Crescendo...</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Benefits List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-          {[
-            { icon: '🔍', text: 'Detecta gastos invisíveis e impulsivos.' },
-            { icon: '🎯', text: 'Transforma impulsos em conquistas reais.' },
-            { icon: '🛡️', text: 'Apoio especializado contra apostas.' },
-            { icon: '💬', text: 'IA empática que entende você.' }
-          ].map((benefit, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 bg-white/50 rounded-2xl border border-slate-100 shadow-sm">
-              <span className="text-xl">{benefit.icon}</span>
-              <p className="text-sm font-medium text-slate-700 leading-tight">{benefit.text}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Action Button */}
-        <div className="pt-4">
+          
+          {/* Main Action Button - Immediately below logo */}
           <button 
             onClick={onStart}
-            className="w-full py-4 px-8 bg-indigo-600 text-white font-bold text-xl rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95 group"
+            className="mt-4 px-10 py-4 bg-white text-slate-950 font-black text-sm rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:bg-indigo-50 hover:shadow-[0_10px_40px_rgba(79,70,229,0.2)] transition-all active:scale-95 uppercase tracking-widest border border-white/20"
           >
-            Começar Agora
-            <span className="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
+            REGISTRO OU LOGIN
           </button>
-          <p className="mt-4 text-xs text-slate-400 font-medium">
-            100% gratuito. Seu bem-estar é nossa prioridade.
+        </div>
+
+        {/* Hero Content */}
+        <div className="max-w-3xl space-y-6 animate-in fade-in duration-1000 delay-300">
+          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tight">
+            Assuma o controle da sua <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-300">
+              Liberdade Real
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-slate-400 max-w-xl mx-auto leading-relaxed font-medium">
+            O primeiro assistente comportamental que protege seu patrimônio de impulsos e vícios invisíveis.
           </p>
         </div>
-      </div>
+
+        {/* Visual Element */}
+        <div className="relative w-full max-w-lg animate-in zoom-in-95 fade-in duration-1000 delay-500">
+          <div className="bg-slate-900/40 backdrop-blur-xl p-8 rounded-[3rem] border border-white/10 shadow-2xl flex gap-6 items-center mx-auto max-w-sm">
+            <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-4xl shadow-inner">
+              🛡️
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">Status do Guardião</p>
+              <p className="text-2xl font-bold text-white tracking-tight">Vigilância Ativa</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40 animate-bounce">
+          <span className="text-[10px] font-bold uppercase tracking-widest">Saiba Mais</span>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 14l-7 7-7-7" />
+          </svg>
+        </div>
+      </section>
+
+      {/* Benefits Section - Only visible on scroll */}
+      <section className="py-32 px-6 bg-slate-900/50 backdrop-blur-sm border-t border-white/5">
+        <div className="max-w-5xl mx-auto space-y-16">
+          <div className="text-center space-y-4">
+            <h3 className="text-xs font-black text-indigo-500 uppercase tracking-[0.4em]">Tecnologia VibeCheck</h3>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Por que somos diferentes?</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              { 
+                icon: '🔍', 
+                title: 'Detecção Comportamental',
+                text: 'Nossa IA identifica padrões de micro-gastos e comportamentos impulsivos antes mesmo de você perceber.',
+                color: 'bg-indigo-500/10 text-indigo-400'
+              },
+              { 
+                icon: '🎯', 
+                title: 'Metas de Recompensa',
+                text: 'Transformamos cada centavo economizado em progresso real para os objetivos que você realmente deseja.',
+                color: 'bg-violet-500/10 text-violet-400'
+              },
+              { 
+                icon: '🛡️', 
+                title: 'Proteção Anti-Apostas',
+                text: 'Apoio psicológico e técnico imediato em momentos de fissura contra o vício em apostas online.',
+                color: 'bg-rose-500/10 text-rose-400'
+              },
+              { 
+                icon: '💬', 
+                title: 'Diálogo Inteligente',
+                text: 'Uma interface que fala a sua língua e oferece empatia real, sem julgamentos ou tecnicismos.',
+                color: 'bg-teal-500/10 text-teal-400'
+              }
+            ].map((benefit, i) => (
+              <div key={i} className="group p-8 bg-slate-800/40 rounded-[2.5rem] border border-white/5 hover:border-indigo-500/30 transition-all hover:bg-slate-800/60 shadow-xl">
+                <div className={`w-14 h-14 ${benefit.color} rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
+                  {benefit.icon}
+                </div>
+                <h4 className="text-xl font-bold text-white mb-3 tracking-tight">{benefit.title}</h4>
+                <p className="text-slate-400 text-sm leading-relaxed font-medium">{benefit.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-12 text-center">
+            <button 
+              onClick={onStart}
+              className="px-12 py-5 bg-indigo-600 text-white font-black text-lg rounded-2xl shadow-2xl shadow-indigo-500/20 hover:bg-indigo-500 transition-all active:scale-95"
+            >
+              Criar Minha Conta Grátis
+            </button>
+            <p className="mt-6 text-slate-500 text-sm font-medium">Junte-se a milhares de pessoas que retomaram o controle.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 border-t border-white/5 text-center bg-slate-950">
+        <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.5em]">
+          VibeCheck Finance &copy; 2024 - Elite Protection
+        </p>
+      </footer>
     </div>
   );
 };
