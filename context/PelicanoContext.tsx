@@ -1,12 +1,14 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types.ts';
+import { UserProfile, Transaction, Goal, VoiceSettings, Gamification, TransactionCategory } from '../types.ts';
 
 interface PelicanoContextType {
   user: UserProfile;
   setUser: React.Dispatch<React.SetStateAction<UserProfile>>;
   transactions: Transaction[];
-  addTransaction: (amount: number, type: Transaction['type'], description: string) => void;
+  addTransaction: (amount: number, type: Transaction['type'], description: string, category?: TransactionCategory) => void;
+  updateTransaction: (id: string, updates: Partial<Transaction>) => void;
+  deleteTransaction: (id: string) => void;
   goals: Goal[];
   addGoal: (name: string, targetAmount: number) => void;
   updateGoalAmount: (goalId: string, amount: number) => void;
@@ -119,12 +121,13 @@ export const PelicanoProvider: React.FC<{ children: ReactNode }> = ({ children }
     return false;
   }, []);
 
-  const addTransaction = useCallback((amount: number, type: Transaction['type'], description: string) => {
+  const addTransaction = useCallback((amount: number, type: Transaction['type'], description: string, category: TransactionCategory = 'Outros') => {
     const newTransaction: Transaction = {
       id: Math.random().toString(36).substr(2, 9),
       amount,
       type,
       description,
+      category,
       date: new Date().toISOString(),
     };
     setTransactions(prev => [newTransaction, ...prev]);
@@ -150,10 +153,18 @@ export const PelicanoProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   }, []);
 
+  const updateTransaction = useCallback((id: string, updates: Partial<Transaction>) => {
+    setTransactions(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
+  }, []);
+
+  const deleteTransaction = useCallback((id: string) => {
+    setTransactions(prev => prev.filter(t => t.id !== id));
+  }, []);
+
   return (
     <PelicanoContext.Provider value={{
       user, setUser,
-      transactions, addTransaction,
+      transactions, addTransaction, updateTransaction, deleteTransaction,
       goals, addGoal, updateGoalAmount, renameGoal, deleteGoal,
       voiceSettings, setVoiceSettings,
       gamification, setGamification

@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { UserProfile, Transaction, Goal, VoiceSettings, Gamification } from '../types.ts';
+import { UserProfile, Transaction, Goal, VoiceSettings, Gamification, TransactionCategory } from '../types.ts';
 
 interface VibeContextType {
   user: UserProfile;
   setUser: React.Dispatch<React.SetStateAction<UserProfile>>;
   transactions: Transaction[];
-  addTransaction: (amount: number, type: Transaction['type'], description: string) => void;
+  addTransaction: (amount: number, type: Transaction['type'], description: string, category?: TransactionCategory) => void;
   goals: Goal[];
   addGoal: (name: string, targetAmount: number) => void;
   updateGoalAmount: (goalId: string, amount: number) => void;
@@ -120,12 +120,14 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return false;
   };
 
-  const addTransaction = (amount: number, type: Transaction['type'], description: string) => {
+  // Fix: Add TransactionCategory to handle the missing property error in Transaction object
+  const addTransaction = (amount: number, type: Transaction['type'], description: string, category: TransactionCategory = 'Outros') => {
     const newTransaction: Transaction = {
       id: Math.random().toString(36).substr(2, 9),
       amount,
       type,
       description,
+      category,
       date: new Date().toISOString(),
     };
     setTransactions(prev => [newTransaction, ...prev]);

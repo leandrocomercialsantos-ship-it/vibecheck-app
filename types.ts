@@ -7,11 +7,14 @@ export interface Goal {
   icon: string;
 }
 
+export type TransactionCategory = 'Alimentação' | 'Lazer' | 'Transporte' | 'Saúde' | 'Educação' | 'Investimento' | 'Outros';
+
 export interface Transaction {
   id: string;
   amount: number;
   type: 'gambling' | 'impulse' | 'saving';
   description: string;
+  category: TransactionCategory;
   date: string;
 }
 

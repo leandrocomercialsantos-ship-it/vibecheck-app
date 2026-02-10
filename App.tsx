@@ -35,7 +35,7 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     if (appState === 'main' && user.name) {
-      speak(`Olá ${user.name}! Bem-vindo ao Pelicano Invest. Vamos proteger seu patrimônio hoje?`, voiceSettings);
+      speak(`Olá ${user.name}! Bem-vindo ao Pelicano Invest Pro. Vamos proteger seu patrimônio hoje?`, voiceSettings);
     }
   }, [appState]);
 
@@ -48,25 +48,24 @@ const AppContent: React.FC = () => {
     const percentageOfBudget = ((amount / user.monthlyBudget) * 100).toFixed(1);
     const investmentReturn = (amount * 1.15).toLocaleString('pt-BR');
 
-    const message = `${user.name}, o Pelicano Invest analisou este ${label}. O custo é de R$ ${amount.toLocaleString('pt-BR')}, ou ${percentageOfBudget}% do seu capital mensal. Este valor reinvestido hoje poderia render R$ ${investmentReturn} em breve. Deseja manter este valor no seu ninho?`;
+    const message = `${user.name}, o Pelicano Invest Pro analisou este ${label}. O custo é de R$ ${amount.toLocaleString('pt-BR')}, ou ${percentageOfBudget}% do seu capital mensal. Este valor reinvestido hoje poderia render R$ ${investmentReturn} em breve. Deseja manter este valor no seu ninho?`;
 
     speak(message, voiceSettings);
     
-    if (confirm(`🦅 ANÁLISE PELICANO\n\n${message}\n\nPresione OK para PROTEGER e POUPAR.\nPresione CANCELAR para prosseguir com o gasto.`)) {
-      addTransaction(amount, 'saving', `Proteção Pelicano: Poupou ao não comprar ${label}`);
-      alert("Decisão sábia. O Pelicano Invest registrou sua economia. 🛡️✨");
-      setActiveView('goals');
+    if (confirm(`🦅 ANÁLISE PELICANO PRO\n\n${message}\n\nPresione OK para PROTEGER e POUPAR.\nPresione CANCELAR para prosseguir com o gasto.`)) {
+      addTransaction(amount, 'saving', `Proteção: ${label}`, 'Outros');
+      alert("Decisão sábia. O Pelicano Invest registrou sua economia no Extrato Inteligente. 🛡️✨");
+      setActiveView('dashboard');
     } else {
-      addTransaction(amount, 'impulse', `Gasto registrado: ${label}`);
+      addTransaction(amount, 'impulse', `Gasto: ${label}`, 'Outros');
       alert("Registro efetuado. O Pelicano continuará vigiando para sua próxima oportunidade.");
       setActiveView('dashboard');
     }
-    setActiveView('dashboard');
   };
 
   const { gamblingTotal, totalSaved } = useMemo(() => {
     const gambling = transactions
-      .filter(t => t.type === 'gambling')
+      .filter(t => t.type === 'gambling' || t.type === 'impulse')
       .reduce((acc, curr) => acc + curr.amount, 0);
     const saved = transactions
       .filter(t => t.type === 'saving')
@@ -146,10 +145,10 @@ const AppContent: React.FC = () => {
       <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8">
         {renderView()}
 
-        {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'dashboard' && (
+        {activeView !== 'scanner' && activeView !== 'profile' && (
           <QuickActions 
-            onAddSaving={(amt) => addTransaction(amt, 'saving', 'Economia registrada')}
-            onAddLoss={(amt) => addTransaction(amt, 'gambling', 'Gasto/Aposta registrada')}
+            onAddSaving={(amt, cat) => addTransaction(amt, 'saving', 'Economia Inteligente', cat)}
+            onAddLoss={(amt, cat) => addTransaction(amt, 'impulse', 'Gasto Registrado', cat)}
             onOpenCrisis={() => setActiveView('chat')}
           />
         )}
@@ -177,10 +176,9 @@ const AppContent: React.FC = () => {
           ))}
         </div>
         
-        {/* Sign-off correctly positioned within the footer stack */}
         <div className="text-center pb-2 opacity-60 pointer-events-none">
           <p className="text-[9px] text-slate-500 italic font-bold tracking-[0.2em] uppercase">
-            by Leandro Dos Santos
+            Pelicano Invest Pro • by Leandro Dos Santos
           </p>
         </div>
       </nav>
