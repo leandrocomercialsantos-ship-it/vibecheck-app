@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
 import { usePelicano } from '../context/PelicanoContext.tsx';
+import { LegalNotice } from './LegalNotice.tsx';
 
 interface SignupPageProps {
   onComplete: () => void;
   onShowLegal: () => void;
 }
 
-export const SignupPage: React.FC<SignupPageProps> = ({ onComplete, onShowLegal }) => {
+export const SignupPage: React.FC<SignupPageProps> = ({ onComplete }) => {
   const { setUser } = usePelicano();
   const [step, setStep] = useState<'form' | 'permissions'>('form');
   const [name, setName] = useState('');
@@ -15,6 +16,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete, onShowLegal 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showLegalModal, setShowLegalModal] = useState(false);
   const [permissions, setPermissions] = useState({
     notifications: false,
     camera: false,
@@ -50,7 +52,14 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete, onShowLegal 
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 animate-in slide-in-from-right-8 duration-500">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 animate-in slide-in-from-right-8 duration-500 relative">
+      {/* Modal de Aviso Legal */}
+      {showLegalModal && (
+        <div className="fixed inset-0 z-[250] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+          <LegalNotice onClose={() => setShowLegalModal(false)} isModal={true} />
+        </div>
+      )}
+
       <div className="max-w-md w-full bg-white rounded-[2.5rem] p-8 shadow-xl border border-slate-100 space-y-8">
         {step === 'form' ? (
           <div className="animate-in fade-in duration-300">
@@ -119,17 +128,17 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete, onShowLegal 
                 />
               </div>
 
-              {/* Trava de Cadastro: Aviso Legal */}
+              {/* Trava de Cadastro: Aviso Legal - Gatilho Modal */}
               <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl border border-orange-100 mt-4">
                 <input 
                   type="checkbox" 
                   id="terms"
                   checked={acceptedTerms}
                   onChange={(e) => setAcceptedTerms(e.target.checked)}
-                  className="mt-1 w-5 h-5 rounded border-orange-300 text-orange-600 focus:ring-orange-500"
+                  className="mt-1 w-5 h-5 rounded border-orange-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
                 />
-                <label htmlFor="terms" className="text-xs text-orange-900 leading-relaxed">
-                  Estou ciente de que o Pelicano Invest é uma ferramenta experimental de entretenimento e concordo com os <button type="button" onClick={onShowLegal} className="underline font-bold hover:text-orange-700">Aviso Legal e Termos de Uso</button>.
+                <label htmlFor="terms" className="text-xs text-orange-900 leading-relaxed cursor-pointer select-none">
+                  Estou ciente de que o Pelicano Invest é uma ferramenta experimental de entretenimento e concordo com os <button type="button" onClick={() => setShowLegalModal(true)} className="underline font-bold text-orange-600 hover:text-orange-800 transition-colors">Aviso Legal e Termos de Uso</button>.
                 </label>
               </div>
 
@@ -193,7 +202,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onComplete, onShowLegal 
 
             <button 
               onClick={handleFinish}
-              className="w-full mt-10 py-4 bg-orange-600 text-white font-bold rounded-2xl shadow-lg shadow-orange-100 hover:bg-orange-700 transition-all active:scale-95"
+              className="w-full mt-10 py-4 bg-orange-600 text-white font-black rounded-2xl shadow-lg shadow-orange-100 hover:bg-orange-700 transition-all active:scale-95"
             >
               Concluir Cadastro
             </button>

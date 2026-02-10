@@ -28,3 +28,36 @@ Suas Regras de Resposta:
 
 Assine mentalmente como Pelicano Invest. NUNCA incentive comportamentos de risco ou apostas.
 `;
+
+export const LEGAL_TEXT = {
+  title: "Aviso Legal e Termos de Uso",
+  version: "Versão Experimental BETA 4.0 - Janeiro 2025",
+  author: "Desenvolvido por Leandro Dos Santos",
+  sections: [
+    {
+      heading: "1. Natureza da Plataforma e Declaração BETA",
+      content: "O Pelicano Invest é uma plataforma digital experimental em estágio BETA. O projeto foi idealizado e desenvolvido de forma independente por Leandro Dos Santos exclusivamente para fins de ENTRETENIMENTO, CONSCIENTIZAÇÃO e EDUCAÇÃO COMPORTAMENTAL. Não se trata de uma ferramenta financeira comercial ou regulamentada."
+    },
+    {
+      heading: "2. Isenção de Responsabilidade sobre Patrimônio Real",
+      content: "O Pelicano Invest, sua equipe, criadores ou mantenedores NÃO fornecem consultoria financeira, corretagem de valores ou gestão de investimentos real. Qualquer dado, cálculo ou sugestão de IA apresentada é puramente simulada e educativa. O usuário NÃO deve basear decisões financeiras do mundo real, investimentos ou movimentações patrimoniais nos dados desta plataforma. Patrimônio é coisa séria: consulte sempre profissionais certificados e instituições financeiras regulamentadas antes de qualquer ação real."
+    },
+    {
+      heading: "3. Foco Social: Combate ao Vício em Apostas",
+      content: "Este projeto nasceu com a missão social de auxiliar na identificação de gatilhos emocionais e combater vícios em apostas e gastos impulsivos através da gamificação. O objetivo é ajudar na organização pessoal e na percepção do custo de oportunidade. Entretanto, esta ferramenta não substitui ajuda médica, psicológica ou psiquiátrica especializada. Se você enfrenta problemas com jogos de azar, procure auxílio profissional imediatamente."
+    },
+    {
+      heading: "4. Limitação de Responsabilidade Civil",
+      content: "O criador, Leandro Dos Santos, exime-se de qualquer responsabilidade direta ou indireta por atos de investimento, manuseio de dinheiro ou perda de patrimônio por parte do usuário. Ao utilizar esta simulação, o usuário assume total e exclusiva responsabilidade por suas finanças reais fora deste ambiente de entretenimento."
+    },
+    {
+      heading: "5. Privacidade e Experiência do Usuário (UX)",
+      content: "Funcionalidades como 'Conexão Bancária' e 'Scanner de Impulso' são representações visuais destinadas a aprimorar a experiência de aprendizado (User Experience). Dados sensíveis bancários não são movimentados e não há conexão real com sistemas de execução financeira de terceiros nesta versão experimental."
+    },
+    {
+      heading: "6. Direitos e Propriedade",
+      content: "Toda a identidade visual, lógica de gamificação e textos são de propriedade intelectual de Leandro Dos Santos. O uso da plataforma implica na aceitação plena destes termos de isenção."
+    }
+  ],
+  footer: "Educação financeira é o caminho, mas a decisão final é sempre sua. Pelicano Invest Pro © 2025 - Wealth Guardianship."
+};
