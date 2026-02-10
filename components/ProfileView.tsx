@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { useVibe } from '../context/VibeContext.tsx';
+import { usePelicano } from '../context/PelicanoContext.tsx';
 
 interface ProfileViewProps {
   onClose?: () => void;
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ onClose }) => {
-  const { user, setUser } = useVibe();
+  const { user, setUser } = usePelicano();
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

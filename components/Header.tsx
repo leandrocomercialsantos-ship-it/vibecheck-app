@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useVibe } from '../context/VibeContext.tsx';
+import { usePelicano } from '../context/PelicanoContext.tsx';
 import { PelicanLogo } from './PelicanLogo.tsx';
 
 interface HeaderProps {
@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
-  const { user } = useVibe();
+  const { user } = usePelicano();
 
   return (
     <header className="px-6 py-6 flex items-center justify-between sticky top-0 z-50 bg-slate-950/20 backdrop-blur-lg">

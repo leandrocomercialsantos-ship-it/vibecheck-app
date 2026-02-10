@@ -1,17 +1,16 @@
+
 import React, { useState } from 'react';
-import { useVibe } from '../context/VibeContext.tsx';
+import { usePelicano } from '../context/PelicanoContext.tsx';
 import { Goal } from '../types.ts';
 
 export const GoalsSystem: React.FC = () => {
-  const { goals, addGoal, updateGoalAmount, renameGoal, deleteGoal } = useVibe();
+  const { goals, addGoal, updateGoalAmount, renameGoal, deleteGoal } = usePelicano();
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   
-  // States para o modal de criação
   const [newName, setNewName] = useState('');
   const [newTarget, setNewTarget] = useState('');
 
-  // States para o modal de edição/gerenciamento
   const [editName, setEditName] = useState('');
   const [investValue, setInvestValue] = useState('');
 
@@ -34,12 +33,10 @@ export const GoalsSystem: React.FC = () => {
     e.preventDefault();
     if (!editingGoal) return;
 
-    // Atualiza nome se mudou
     if (editName.trim() && editName !== editingGoal.name) {
       renameGoal(editingGoal.id, editName);
     }
 
-    // Adiciona saldo se houver valor
     const amountToAdd = parseFloat(investValue);
     if (!isNaN(amountToAdd) && amountToAdd > 0) {
       updateGoalAmount(editingGoal.id, amountToAdd);
@@ -49,36 +46,34 @@ export const GoalsSystem: React.FC = () => {
   };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-8 pb-24">
+    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-6 md:space-y-8 pb-32">
       
-      {/* Header Section */}
-      <div className="space-y-2 px-2 flex justify-between items-end">
+      <div className="space-y-1 px-2 flex justify-between items-end">
         <div>
-          <h2 className="text-3xl font-black text-white tracking-tight">Cofre de Sonhos 🎯</h2>
-          <p className="text-slate-400 font-medium">Clique em uma meta para gerenciar.</p>
+          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Cofre de Sonhos 🎯</h2>
+          <p className="text-slate-400 text-xs md:text-sm font-medium">Toque para gerenciar seus ativos.</p>
         </div>
       </div>
 
-      {/* Goals Content */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         {goals.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center space-y-8 glass-premium rounded-[3rem] border-dashed border-white/10">
-            <div className="w-24 h-24 bg-indigo-500/10 rounded-full flex items-center justify-center text-5xl animate-float">
+          <div className="flex flex-col items-center justify-center py-12 md:py-16 px-6 text-center space-y-8 glass-premium rounded-[3rem] border-dashed border-white/10">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-orange-500/10 rounded-full flex items-center justify-center text-4xl md:text-5xl animate-float">
               ✨
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-white">Nenhum sonho cadastrado ainda</h3>
-              <p className="text-slate-500 text-sm max-w-xs mx-auto">Comece definindo o seu primeiro grande objetivo para o Guardião te ajudar.</p>
+              <h3 className="text-lg md:text-xl font-bold text-white">Nenhum sonho cadastrado</h3>
+              <p className="text-slate-500 text-xs max-w-xs mx-auto">Defina seu primeiro grande objetivo para o Pelicano te ajudar.</p>
             </div>
             <button 
               onClick={() => setShowAddModal(true)}
-              className="px-8 py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-[0_0_30px_rgba(79,70,229,0.4)] hover:scale-105 active:scale-95 transition-all"
+              className="px-8 py-4 bg-orange-600 text-white font-black rounded-2xl shadow-[0_0_30px_rgba(251,146,60,0.4)] hover:scale-105 active:scale-95 transition-all text-sm"
             >
               CRIAR PRIMEIRA META
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-4 md:gap-6">
             {goals.map((goal) => {
               const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
               const isCompleted = progress >= 100;
@@ -87,22 +82,22 @@ export const GoalsSystem: React.FC = () => {
                 <div 
                   key={goal.id} 
                   onClick={() => openEditModal(goal)}
-                  className={`glass-premium p-8 rounded-[2.5rem] space-y-6 relative overflow-hidden group cursor-pointer transition-all hover:bg-white/[0.05] active:scale-[0.99] border-2 ${isCompleted ? 'border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.2)]' : 'border-white/5'}`}
+                  className={`glass-premium p-6 md:p-8 rounded-[2.5rem] space-y-5 relative overflow-hidden group cursor-pointer transition-all hover:bg-white/[0.05] active:scale-[0.99] border-2 ${isCompleted ? 'border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.15)]' : 'border-white/5'}`}
                 >
-                  <div className={`absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-1000 ${isCompleted ? 'bg-amber-400/10' : 'bg-indigo-500/5'}`}></div>
+                  <div className={`absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-1000 ${isCompleted ? 'bg-amber-400/10' : 'bg-orange-500/5'}`}></div>
                   
                   <div className="flex justify-between items-start relative z-10">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="text-xl font-bold text-white tracking-tight">{goal.name}</h4>
-                        {isCompleted && <span className="text-xl animate-bounce">🏆</span>}
+                        <h4 className="text-lg md:text-xl font-bold text-white tracking-tight truncate max-w-[150px] md:max-w-xs">{goal.name}</h4>
+                        {isCompleted && <span className="text-lg animate-bounce">🏆</span>}
                       </div>
-                      <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
+                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
                         Objetivo: R$ {goal.targetAmount.toLocaleString('pt-BR')}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className={`text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r ${isCompleted ? 'from-amber-300 to-amber-500' : 'from-indigo-400 to-violet-400'}`}>
+                      <span className={`text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r ${isCompleted ? 'from-amber-300 to-amber-500' : 'from-orange-400 to-amber-300'}`}>
                         {Math.round(progress)}%
                       </span>
                     </div>
@@ -113,9 +108,9 @@ export const GoalsSystem: React.FC = () => {
                       <span>R$ {goal.currentAmount.toLocaleString('pt-BR')}</span>
                       <span>{isCompleted ? 'CONCLUÍDO' : `Restam R$ ${(goal.targetAmount - goal.currentAmount).toLocaleString('pt-BR')}`}</span>
                     </div>
-                    <div className="h-4 bg-white/5 rounded-full overflow-hidden p-1">
+                    <div className="h-3 md:h-4 bg-white/5 rounded-full overflow-hidden p-1">
                       <div 
-                        className={`h-full rounded-full transition-all duration-1000 ease-out ${isCompleted ? 'bg-gradient-to-r from-amber-400 to-orange-500 shadow-[0_0_15px_rgba(251,191,36,0.5)]' : 'bg-gradient-to-r from-indigo-500 to-violet-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]'}`}
+                        className={`h-full rounded-full transition-all duration-1000 ease-out ${isCompleted ? 'bg-gradient-to-r from-amber-400 to-orange-500' : 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-[0_0_15px_rgba(251,146,60,0.5)]'}`}
                         style={{ width: `${progress}%` }}
                       ></div>
                     </div>
@@ -126,26 +121,25 @@ export const GoalsSystem: React.FC = () => {
             
             <button 
               onClick={() => setShowAddModal(true)}
-              className="w-full py-12 border-2 border-dashed border-white/5 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-500 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all group"
+              className="w-full py-8 md:py-12 border-2 border-dashed border-white/5 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-500 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all group"
             >
-              <span className="text-4xl mb-2 group-hover:scale-125 transition-transform">➕</span>
-              <span className="font-black text-xs uppercase tracking-widest">Adicionar Nova Meta</span>
+              <span className="text-3xl md:text-4xl mb-2 group-hover:scale-125 transition-transform">➕</span>
+              <span className="font-black text-[10px] uppercase tracking-widest">Nova Meta</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* MODAL: Criar Nova Meta */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-          <div className="glass-premium p-8 rounded-[3rem] w-full max-w-sm border-indigo-500/30 animate-in zoom-in-95">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex items-center justify-center p-6">
+          <div className="glass-premium p-8 rounded-[3rem] w-full max-w-sm border-orange-500/30 animate-in zoom-in-95">
             <h3 className="text-2xl font-black text-white mb-8 text-center">Novo Objetivo ✨</h3>
             <form onSubmit={handleCreateGoal} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Nome da Meta</label>
                 <input 
                   autoFocus
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white font-bold outline-none focus:border-indigo-500 transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white font-bold outline-none focus:border-orange-500 transition-all"
                   placeholder="Ex: Viagem para Europa"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
@@ -157,7 +151,7 @@ export const GoalsSystem: React.FC = () => {
                   <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold">R$</span>
                   <input 
                     type="number"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 pl-12 text-white font-bold outline-none focus:border-indigo-500 transition-all"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 pl-12 text-white font-bold outline-none focus:border-orange-500 transition-all"
                     placeholder="0.00"
                     value={newTarget}
                     onChange={(e) => setNewTarget(e.target.value)}
@@ -174,7 +168,7 @@ export const GoalsSystem: React.FC = () => {
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl hover:bg-indigo-500 transition-all"
+                  className="flex-1 py-4 bg-orange-600 text-white font-black rounded-2xl shadow-xl hover:bg-orange-500 transition-all"
                 >
                   CRIAR
                 </button>
@@ -184,20 +178,18 @@ export const GoalsSystem: React.FC = () => {
         </div>
       )}
 
-      {/* MODAL: Gerenciar Meta (Edit/Invest/Delete) */}
       {editingGoal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex items-center justify-center p-6">
           <div className="glass-premium p-8 rounded-[3rem] w-full max-w-sm border-white/10 animate-in zoom-in-95">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-black text-white">Gerenciar Meta</h3>
               <button 
-                // Fix: explicit check of the return value from deleteGoal to avoid testing 'void' for truthiness
                 onClick={() => {
                   if (deleteGoal(editingGoal.id)) {
                     setEditingGoal(null);
                   }
                 }}
-                className="text-rose-400 hover:text-rose-500 p-2"
+                className="text-rose-400 hover:text-rose-500 p-2 transition-transform active:scale-90"
                 title="Excluir Meta"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,17 +199,15 @@ export const GoalsSystem: React.FC = () => {
             </div>
 
             <form onSubmit={handleUpdateGoal} className="space-y-6">
-              {/* Renomear */}
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Nome da Meta</label>
                 <input 
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-indigo-500 transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-bold outline-none focus:border-orange-500 transition-all"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                 />
               </div>
 
-              {/* Adicionar Saldo */}
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-emerald-400 uppercase tracking-widest ml-1">Adicionar Saldo 💰</label>
                 <div className="relative">
@@ -252,13 +242,6 @@ export const GoalsSystem: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Credits */}
-      <div className="text-center pt-4">
-        <p className="text-[10px] text-slate-600 italic font-medium tracking-widest">
-          by Leandro Dos Santos
-        </p>
-      </div>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { useVibe } from '../context/VibeContext.tsx';
+import { usePelicano } from '../context/PelicanoContext.tsx';
 
 export const RealityReport: React.FC = () => {
-  const { transactions } = useVibe();
+  const { transactions } = usePelicano();
   
   const savedThisMonth = transactions
     .filter(t => t.type === 'saving')
@@ -21,7 +21,7 @@ export const RealityReport: React.FC = () => {
         <h2 className="text-3xl font-black italic mb-2">Relatório de Realidade 📊</h2>
         <p className="text-indigo-200 text-sm font-medium">O que você construiu este mês.</p>
         
-        <div className="mt-10 grid grid-cols-2 gap-4">
+        <div className="mt-10 grid grid-cols-1 xs:grid-cols-2 gap-4">
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-[2rem]">
             <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-300">Impulsos Evitados</p>
             <p className="text-4xl font-black mt-1">{impulsesAvoided}</p>

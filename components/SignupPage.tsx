@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
-import { useVibe } from '../context/VibeContext.tsx';
+import { usePelicano } from '../context/PelicanoContext.tsx';
 
 interface SignupPageProps {
   onComplete: () => void;
 }
 
 export const SignupPage: React.FC<SignupPageProps> = ({ onComplete }) => {
-  const { setUser } = useVibe();
+  const { setUser } = usePelicano();
   const [step, setStep] = useState<'form' | 'permissions'>('form');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from './components/Header.tsx';
 import { Dashboard } from './components/Dashboard.tsx';
 import { CrisisChat } from './components/CrisisChat.tsx';
@@ -12,28 +12,26 @@ import { Scanner } from './components/Scanner.tsx';
 import { RealityReport } from './components/RealityReport.tsx';
 import { CommunityFeed } from './components/CommunityFeed.tsx';
 import { ProfileView } from './components/ProfileView.tsx';
-import { VibeProvider, useVibe } from './context/VibeContext.tsx';
+import { PelicanoProvider, usePelicano } from './context/PelicanoContext.tsx';
 import { speak } from './services/speech.ts';
-import { Transaction, Goal, UserProfile, VoiceSettings, Gamification } from './types.ts';
 
 type View = 'dashboard' | 'goals' | 'chat' | 'scanner' | 'profile' | 'settings-voice' | 'gamification' | 'report' | 'community';
 type AppState = 'landing' | 'signup' | 'main';
 
 const AppContent: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(() => {
-    const saved = localStorage.getItem('vibecheck_user_data');
+    const saved = localStorage.getItem('pelicano_user_data');
     return (saved && JSON.parse(saved).name) ? 'main' : 'landing';
   });
   const [activeView, setActiveView] = useState<View>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const { 
-    user, setUser, 
+    user, 
     transactions, addTransaction, 
-    goals, 
-    voiceSettings, setVoiceSettings, 
+    voiceSettings, 
     gamification 
-  } = useVibe();
+  } = usePelicano();
 
   useEffect(() => {
     if (appState === 'main' && user.name) {
@@ -66,13 +64,15 @@ const AppContent: React.FC = () => {
     setActiveView('dashboard');
   };
 
-  const gamblingTotal = transactions
-    .filter(t => t.type === 'gambling')
-    .reduce((acc, curr) => acc + curr.amount, 0);
-
-  const totalSaved = transactions
-    .filter(t => t.type === 'saving')
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  const { gamblingTotal, totalSaved } = useMemo(() => {
+    const gambling = transactions
+      .filter(t => t.type === 'gambling')
+      .reduce((acc, curr) => acc + curr.amount, 0);
+    const saved = transactions
+      .filter(t => t.type === 'saving')
+      .reduce((acc, curr) => acc + curr.amount, 0);
+    return { gamblingTotal: gambling, totalSaved: saved };
+  }, [transactions]);
 
   if (appState === 'landing') return <LandingPage onStart={() => setAppState('signup')} />;
   if (appState === 'signup') return <SignupPage onComplete={() => setAppState('main')} />;
@@ -132,7 +132,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-32 md:pb-0 font-['Inter'] selection:bg-orange-500/30">
+    <div className="min-h-screen flex flex-col pb-40 md:pb-0 font-['Inter'] selection:bg-orange-500/30">
       <Header onMenuClick={() => setIsSidebarOpen(true)} />
       
       <Sidebar 
@@ -143,7 +143,7 @@ const AppContent: React.FC = () => {
         stats={gamification}
       />
 
-      <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8 pb-10">
+      <main className="flex-1 max-w-xl mx-auto w-full p-4 md:p-8 space-y-8">
         {renderView()}
 
         {activeView !== 'scanner' && activeView !== 'profile' && activeView !== 'dashboard' && (
@@ -156,8 +156,8 @@ const AppContent: React.FC = () => {
       </main>
 
       {/* Navigation Inferior Pelicano */}
-      <nav className="fixed bottom-0 left-0 right-0 p-4 md:p-6 z-40 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none">
-        <div className="glass-premium rounded-[2.5rem] flex justify-around p-4 shadow-2xl border border-white/10 pointer-events-auto max-w-md mx-auto">
+      <nav className="fixed bottom-0 left-0 right-0 p-4 md:p-6 z-[100] bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent pointer-events-none">
+        <div className="glass-premium rounded-[2.5rem] flex justify-around p-4 shadow-2xl border border-white/10 pointer-events-auto max-w-md mx-auto mb-2">
           {[
             { icon: '🏠', view: 'dashboard' as const, label: 'Início' },
             { icon: '🎯', view: 'goals' as const, label: 'Cofre' },
@@ -176,22 +176,22 @@ const AppContent: React.FC = () => {
             </button>
           ))}
         </div>
+        
+        {/* Sign-off correctly positioned within the footer stack */}
+        <div className="text-center pb-2 opacity-60 pointer-events-none">
+          <p className="text-[9px] text-slate-500 italic font-bold tracking-[0.2em] uppercase">
+            by Leandro Dos Santos
+          </p>
+        </div>
       </nav>
-      
-      {/* Footer Fixo (by Leandro Dos Santos) */}
-      <div className="fixed bottom-1 left-0 right-0 text-center pointer-events-none z-[60] pb-2">
-        <p className="text-[9px] text-slate-500 italic font-bold tracking-[0.2em] opacity-80 uppercase">
-          by Leandro Dos Santos
-        </p>
-      </div>
     </div>
   );
 };
 
 const App: React.FC = () => (
-  <VibeProvider>
+  <PelicanoProvider>
     <AppContent />
-  </VibeProvider>
+  </PelicanoProvider>
 );
 
 export default App;
