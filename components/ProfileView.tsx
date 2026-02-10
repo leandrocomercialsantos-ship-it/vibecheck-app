@@ -20,6 +20,11 @@ export const ProfileView: React.FC = () => {
     setUser(prev => ({ ...prev, name: e.target.value }));
   };
 
+  const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value) || 0;
+    setUser(prev => ({ ...prev, monthlyBudget: val }));
+  };
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
       <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
@@ -60,8 +65,24 @@ export const ProfileView: React.FC = () => {
               value={user.name} 
               onChange={handleNameChange}
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
+              Orçamento Mensal (Base para Cálculos)
+            </label>
+            <div className="relative">
+              <span className="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">R$</span>
+              <input 
+                type="number"
+                className="w-full p-5 pl-12 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-indigo-500 focus:bg-white outline-none transition-all font-bold text-slate-800 shadow-sm" 
+                placeholder="Ex: 3000"
+                value={user.monthlyBudget} 
+                onChange={handleBudgetChange}
+              />
+            </div>
             <p className="text-[10px] text-slate-400 ml-1 font-medium">
-              Como o Guardião deve te chamar nas saudações.
+              Usado pelo Guardião para analisar o impacto das suas compras.
             </p>
           </div>
 
@@ -84,18 +105,8 @@ export const ProfileView: React.FC = () => {
                 <><span>🏦</span> Conectar via Open Finance</>
               )}
             </button>
-            <p className="text-[10px] text-slate-400 mt-3 text-center font-bold leading-relaxed">
-              Ao conectar, o Guardião poderá alertar automaticamente sobre depósitos suspeitos em plataformas de apostas.
-            </p>
           </div>
         </div>
-      </div>
-
-      <div className="bg-indigo-50 p-6 rounded-[2rem] border border-indigo-100 flex items-center gap-4">
-        <div className="text-2xl">✨</div>
-        <p className="text-xs text-indigo-700 font-medium leading-relaxed">
-          Seu perfil é mantido localmente. Nenhuma foto ou nome real é enviado para nossos servidores sem sua permissão explícita.
-        </p>
       </div>
     </div>
   );

@@ -46,20 +46,24 @@ const AppContent: React.FC = () => {
     setActiveView('chat');
   };
 
-  const handleScanComplete = (amount: number) => {
-    const savingsItems = [
-      { name: 'meses de Netflix', cost: 40 },
-      { name: 'jantares especiais', cost: 120 },
-      { name: 'viagens de Uber', cost: 25 }
-    ];
-    const item = savingsItems[Math.floor(Math.random() * savingsItems.length)];
-    const equiv = (amount / item.cost).toFixed(1);
+  const handleScanComplete = (amount: number, label: string) => {
+    // Cálculo de impacto
+    const percentageOfBudget = ((amount / user.monthlyBudget) * 100).toFixed(1);
+    const investmentReturn = (amount * 1.1).toLocaleString('pt-BR'); // Simulação simples de 10% a.a.
+
+    const message = `${user.name}, esse ${label} custa R$ ${amount.toLocaleString('pt-BR')}. Isso representa ${percentageOfBudget}% do seu orçamento mensal. Se você investir esse valor, em 1 ano ele poderia valer mais de R$ ${investmentReturn}. Quer mesmo continuar com essa compra ou prefere proteger seu futuro?`;
+
+    speak(message, voiceSettings);
     
-    speak(`Detectei uma tentativa de gasto de ${amount} reais. Sabia que isso equivale a cerca de ${equiv} ${item.name}?`, voiceSettings);
-    
-    if (confirm(`🚨 Análise do Guardião:\nR$ ${amount.toLocaleString('pt-BR')} detectados.\n\nIsso equivale a ${equiv} ${item.name}.\n\nDeseja evitar este gasto e colocar no Cofre de Sonhos?`)) {
-      addTransaction(amount, 'saving', 'Impulso evitado via Scanner');
+    // Custom logic alert
+    if (confirm(`🤖 ANÁLISE DO GUARDIÃO\n\n${message}\n\nPresione OK para DESISTIR e POUPAR.\nPresione CANCELAR para comprar assim mesmo.`)) {
+      addTransaction(amount, 'saving', `Economia: Desistiu de comprar ${label}`);
+      alert("Boa escolha! Esse valor foi adicionado ao seu progresso de metas. 🛡️✨");
       setActiveView('goals');
+    } else {
+      addTransaction(amount, 'impulse', `Gasto por impulso: ${label}`);
+      alert("Entendido. Registramos o gasto, mas lembre-se do seu objetivo maior.");
+      setActiveView('dashboard');
     }
     setActiveView('dashboard');
   };

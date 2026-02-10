@@ -17,11 +17,13 @@ interface VibeContextType {
 
 const VibeContext = createContext<VibeContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'vibecheck_user_data';
+const USER_KEY = 'vibecheck_user_data';
+const TRANSACTIONS_KEY = 'vibecheck_transactions';
+const GOALS_KEY = 'vibecheck_goals';
 
 export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(USER_KEY);
     return saved ? JSON.parse(saved) : {
       name: '',
       email: '',
@@ -29,7 +31,18 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       vibe: 'Iniciando jornada 🛡️',
       guardianContact: '',
       isBankConnected: false,
+      monthlyBudget: 3000, // Salário médio padrão para cálculos
     };
+  });
+
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    const saved = localStorage.getItem(TRANSACTIONS_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [goals, setGoals] = useState<Goal[]>(() => {
+    const saved = localStorage.getItem(GOALS_KEY);
+    return saved ? JSON.parse(saved) : INITIAL_GOALS;
   });
 
   const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>({
@@ -45,12 +58,18 @@ export const VibeProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     badges: [],
   });
 
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [goals, setGoals] = useState<Goal[]>(INITIAL_GOALS);
+  // Persist values
+  useEffect(() => {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }, [user]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-  }, [user]);
+    localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(transactions));
+  }, [transactions]);
+
+  useEffect(() => {
+    localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+  }, [goals]);
 
   const addTransaction = (amount: number, type: Transaction['type'], description: string) => {
     const newTransaction: Transaction = {

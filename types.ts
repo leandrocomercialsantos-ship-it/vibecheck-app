@@ -34,6 +34,7 @@ export interface UserProfile {
   vibe: string;
   guardianContact: string;
   isBankConnected: boolean;
+  monthlyBudget: number;
 }
 
 export interface VoiceSettings {
